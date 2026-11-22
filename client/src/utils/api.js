@@ -28,7 +28,10 @@ export const apiFetch = async (endpoint, options = {}) => {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(data.error || `Server error (${response.status})`);
+    if (response.status === 404 || response.status === 405) {
+      throw new Error('ব্যাকএন্ড সার্ভার এখনও লাইভ করা হয়নি। দয়া করে ব্যাকএন্ড URL কনফিগার করুন।');
+    }
+    throw new Error(data.error || `সার্ভার এরর (${response.status})`);
   }
 
   return data;
