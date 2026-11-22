@@ -45,6 +45,35 @@ const BASE_SLOTS = {
   blue: [[11, 2], [11, 3], [12, 2], [12, 3]]
 };
 
+function RealisticDice({ value = 1, isRolling = false }) {
+  const pipsMap = {
+    1: [[1, 1]],
+    2: [[0, 0], [2, 2]],
+    3: [[0, 0], [1, 1], [2, 2]],
+    4: [[0, 0], [0, 2], [2, 0], [2, 2]],
+    5: [[0, 0], [0, 2], [1, 1], [2, 0], [2, 2]],
+    6: [[0, 0], [0, 2], [1, 0], [1, 2], [2, 0], [2, 2]]
+  };
+  const activePips = pipsMap[value] || [[1, 1]];
+
+  return (
+    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br from-white via-slate-100 to-slate-200 border-2 border-slate-300 shadow-[0_8px_16px_rgba(0,0,0,0.5),inset_0_2px_3px_rgba(255,255,255,0.9)] p-2 grid grid-cols-3 grid-rows-3 transition-transform ${isRolling ? 'animate-spin' : ''}`}>
+      {Array.from({ length: 3 }).map((_, r) =>
+        Array.from({ length: 3 }).map((_, c) => {
+          const hasPip = activePips.some(([pr, pc]) => pr === r && pc === c);
+          return (
+            <div key={`${r}-${c}`} className="flex items-center justify-center">
+              {hasPip && (
+                <div className={`w-2 h-2 rounded-full ${value === 1 ? 'bg-red-600' : 'bg-slate-900'} shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]`} />
+              )}
+            </div>
+          );
+        })
+      )}
+    </div>
+  );
+}
+
 export default function LudoGameView({ match, gameState, currentUser, socket, onLeave }) {
   const [chatOpen, setChatOpen] = useState(false);
   const [chatMessage, setChatMessage] = useState('');
@@ -290,9 +319,9 @@ export default function LudoGameView({ match, gameState, currentUser, socket, on
           </div>
         </div>
 
-        {/* 15x15 Ludo Board Grid */}
-        <div className="relative aspect-square w-full max-w-[500px] bg-slate-950 p-2 sm:p-3 rounded-3xl border-4 border-slate-800 shadow-2xl overflow-hidden">
-          <div className="grid grid-cols-15 grid-rows-15 w-full h-full gap-0.5 bg-slate-800/50 rounded-2xl overflow-hidden relative">
+        {/* 15x15 Deluxe Realistic Ludo Board Grid */}
+        <div className="relative aspect-square w-full max-w-[500px] bg-gradient-to-br from-amber-950 via-stone-900 to-amber-950 p-2.5 sm:p-4 rounded-[2rem] border-[6px] border-amber-900/80 shadow-[0_25px_60px_rgba(0,0,0,0.85),inset_0_2px_4px_rgba(255,255,255,0.15)] overflow-hidden">
+          <div className="grid grid-cols-15 grid-rows-15 w-full h-full gap-0.5 bg-slate-950 rounded-2xl overflow-hidden relative shadow-inner">
             {/* 15x15 Cells */}
             {Array.from({ length: 15 }).map((_, r) =>
               Array.from({ length: 15 }).map((_, c) => {
@@ -302,16 +331,16 @@ export default function LudoGameView({ match, gameState, currentUser, socket, on
                 let isHomeTriangle = (r >= 6 && r <= 8 && c >= 6 && c <= 8);
 
                 // Base Corners
-                if (r < 6 && c < 6) bgStyle = 'bg-red-950/60 border border-red-900/30';
-                else if (r < 6 && c > 8) bgStyle = 'bg-emerald-950/60 border border-emerald-900/30';
-                else if (r > 8 && c > 8) bgStyle = 'bg-yellow-950/60 border border-yellow-900/30';
-                else if (r > 8 && c < 6) bgStyle = 'bg-blue-950/60 border border-blue-900/30';
+                if (r < 6 && c < 6) bgStyle = 'bg-gradient-to-br from-red-950 to-red-900/80 border border-red-800/40 shadow-inner';
+                else if (r < 6 && c > 8) bgStyle = 'bg-gradient-to-br from-emerald-950 to-emerald-900/80 border border-emerald-800/40 shadow-inner';
+                else if (r > 8 && c > 8) bgStyle = 'bg-gradient-to-br from-amber-950 to-yellow-900/80 border border-yellow-800/40 shadow-inner';
+                else if (r > 8 && c < 6) bgStyle = 'bg-gradient-to-br from-blue-950 to-blue-900/80 border border-blue-800/40 shadow-inner';
 
                 // Home Paths
-                if (r === 7 && c >= 1 && c <= 5) bgStyle = 'bg-red-600/80';
-                if (c === 7 && r >= 1 && r <= 5) bgStyle = 'bg-emerald-600/80';
-                if (r === 7 && c >= 9 && c <= 13) bgStyle = 'bg-yellow-500/80';
-                if (c === 7 && r >= 9 && r <= 13) bgStyle = 'bg-blue-600/80';
+                if (r === 7 && c >= 1 && c <= 5) bgStyle = 'bg-red-600/90 shadow-inner';
+                if (c === 7 && r >= 1 && r <= 5) bgStyle = 'bg-emerald-600/90 shadow-inner';
+                if (r === 7 && c >= 9 && c <= 13) bgStyle = 'bg-yellow-500/90 shadow-inner';
+                if (c === 7 && r >= 9 && r <= 13) bgStyle = 'bg-blue-600/90 shadow-inner';
 
                 // Starting Safe Squares
                 if (r === 6 && c === 1) { bgStyle = 'bg-red-600'; isStar = true; }
@@ -322,7 +351,7 @@ export default function LudoGameView({ match, gameState, currentUser, socket, on
                 // Star Safe Squares
                 if ((r === 2 && c === 6) || (r === 6 && c === 12) || (r === 12 && c === 8) || (r === 8 && c === 2)) {
                   isStar = true;
-                  bgStyle = 'bg-slate-800';
+                  bgStyle = 'bg-slate-800/90';
                 }
 
                 if (isHomeTriangle) {
@@ -337,7 +366,7 @@ export default function LudoGameView({ match, gameState, currentUser, socket, on
                     className={`relative flex items-center justify-center select-none text-[8px] transition ${bgStyle}`}
                   >
                     {isStar && !isHomeTriangle && (
-                      <span className="text-amber-300 opacity-80 text-[10px]">★</span>
+                      <span className="text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.9)] text-[11px] font-black">★</span>
                     )}
 
                     {isHomeTriangle && r === 7 && c === 7 && (
@@ -353,11 +382,11 @@ export default function LudoGameView({ match, gameState, currentUser, socket, on
                           onClick={() => handleTokenClick(token.id)}
                           disabled={!isClickable}
                           title={`${player.username}'s Token #${token.id + 1}`}
-                          className={`absolute w-4/5 h-4/5 rounded-full flex items-center justify-center font-bold text-[9px] text-white shadow-lg transition-transform duration-200 z-10 ${
-                            player.color === 'red' ? 'bg-gradient-to-b from-red-400 to-red-600 border border-red-200' :
-                            player.color === 'yellow' ? 'bg-gradient-to-b from-yellow-300 to-amber-500 border border-yellow-100 text-slate-900' :
-                            player.color === 'green' ? 'bg-gradient-to-b from-emerald-400 to-emerald-600 border border-emerald-200' :
-                            'bg-gradient-to-b from-blue-400 to-blue-600 border border-blue-200'
+                          className={`absolute w-[86%] h-[86%] rounded-full flex items-center justify-center font-black text-[9px] shadow-[0_4px_8px_rgba(0,0,0,0.7),inset_0_2px_3px_rgba(255,255,255,0.45)] transition-all duration-200 z-10 ${
+                            player.color === 'red' ? 'bg-gradient-to-b from-red-400 via-red-500 to-red-700 text-white ring-1 ring-red-200' :
+                            player.color === 'yellow' ? 'bg-gradient-to-b from-yellow-300 via-amber-400 to-amber-600 text-slate-950 ring-1 ring-yellow-100' :
+                            player.color === 'green' ? 'bg-gradient-to-b from-emerald-400 via-emerald-500 to-emerald-700 text-white ring-1 ring-emerald-200' :
+                            'bg-gradient-to-b from-blue-400 via-blue-500 to-blue-700 text-white ring-1 ring-blue-200'
                           } ${
                             isClickable ? 'ring-4 ring-amber-400 animate-pulse-glow cursor-pointer scale-125 z-20 hover:scale-135' : ''
                           }`}
@@ -374,39 +403,39 @@ export default function LudoGameView({ match, gameState, currentUser, socket, on
         </div>
 
         {/* Dice & Action Controls */}
-        <div className="w-full mt-4 flex items-center justify-between bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
-          <div className="flex flex-col">
-            <span className="text-xs text-slate-400 font-medium">Dice Value</span>
-            <span className="text-2xl font-black text-amber-400">
-              {gameState?.diceValue ? `${gameState.diceValue} 🎲` : '—'}
-            </span>
-            {gameState?.hasRolled && isMyTurn && (
-              <span className="text-[11px] text-emerald-400 font-semibold animate-pulse mt-0.5">
-                👉 Tap highlighted token!
+        <div className="w-full mt-4 flex items-center justify-between bg-slate-900/90 border border-slate-800 rounded-2xl p-3 sm:p-4 shadow-xl">
+          <div className="flex items-center gap-3">
+            <RealisticDice value={gameState?.diceValue || 1} isRolling={rollingAnim} />
+            <div className="flex flex-col">
+              <span className="text-[11px] text-slate-400 font-medium">ডাইস পয়েন্ট</span>
+              <span className="text-xl font-black text-amber-400 font-mono">
+                {gameState?.diceValue ? `${gameState.diceValue}` : '—'}
               </span>
-            )}
+              {gameState?.hasRolled && isMyTurn && (
+                <span className="text-[11px] text-emerald-400 font-semibold animate-pulse">
+                  👉 চাল দিতে গুটি স্পর্শ করুন
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Interactive Dice Roll Button */}
           <button
             onClick={handleRollDice}
             disabled={!isMyTurn || gameState?.hasRolled || rollingAnim}
-            className={`flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-black text-base transition-all duration-200 shadow-xl ${
+            className={`flex items-center gap-2 px-6 py-3.5 rounded-2xl font-black text-sm sm:text-base transition-all duration-200 shadow-xl ${
               isMyTurn && !gameState?.hasRolled
                 ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 glow-gold cursor-pointer transform hover:-translate-y-0.5 active:translate-y-0 scale-105'
                 : 'bg-slate-800 text-slate-500 cursor-not-allowed opacity-60'
             }`}
           >
-            <div className={`w-8 h-8 rounded-xl bg-slate-950/20 flex items-center justify-center text-lg ${rollingAnim ? 'animate-spin' : ''}`}>
-              🎲
-            </div>
-            <span>{rollingAnim ? 'Rolling...' : isMyTurn ? 'ROLL DICE' : 'WAIT TURN'}</span>
+            <span>{rollingAnim ? 'ঘুরছে...' : isMyTurn ? 'ডাইস রোল করুন' : 'অপেক্ষা করুন'}</span>
           </button>
 
           {/* Chat Drawer Toggle */}
           <button
             onClick={() => setChatOpen(!chatOpen)}
-            className="relative p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition"
+            className="relative p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition cursor-pointer"
           >
             <MessageSquare className="w-5 h-5" />
             {chatHistory.length > 0 && (

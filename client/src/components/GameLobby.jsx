@@ -40,7 +40,7 @@ const GAMES = [
   }
 ];
 
-const STAKES = [20, 50, 100, 200, 500, 1000];
+const STAKES = [50, 100, 200, 500, 1000, 2000];
 
 export default function GameLobby({ 
   currentUser, 

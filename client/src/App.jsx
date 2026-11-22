@@ -18,6 +18,8 @@ import TournamentsModal from './components/TournamentsModal';
 import DisputesModal from './components/DisputesModal';
 import InvitePopupModal from './components/InvitePopupModal';
 import LobbyChatDrawer from './components/LobbyChatDrawer';
+import confetti from 'canvas-confetti';
+import { sound } from './utils/sound';
 import { apiFetch, getSocket, setAuthToken } from './utils/api';
 import { translations } from './utils/i18n';
 
@@ -57,6 +59,7 @@ export default function App() {
     amount: ''
   });
   const [authModal, setAuthModal] = useState({ isOpen: false, mode: 'login' });
+  const [welcomeBonusUser, setWelcomeBonusUser] = useState(null);
   const [tournamentsModalOpen, setTournamentsModalOpen] = useState(false);
   const [disputesModalOpen, setDisputesModalOpen] = useState(false);
 
@@ -472,11 +475,50 @@ export default function App() {
         isOpen={authModal.isOpen}
         initialMode={authModal.mode}
         onClose={() => setAuthModal(prev => ({ ...prev, isOpen: false }))}
-        onAuthSuccess={(user) => {
+        onAuthSuccess={(user, isNew) => {
           setCurrentUser(user);
           refreshUser();
+          if (isNew) {
+            setWelcomeBonusUser(user);
+            sound.playWin();
+            try {
+              confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+            } catch (e) {}
+          }
         }}
       />
+
+      {/* 50 BDT Free Welcome Reward Popup Modal */}
+      {welcomeBonusUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+          <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-amber-500/50 rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl relative">
+            <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center mx-auto mb-3 shadow-xl glow-gold text-3xl">
+              🎁
+            </div>
+            <span className="inline-block px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 font-bold text-xs mb-2">
+              ওয়েলকাম বোনাস ক্রেডিট
+            </span>
+            <h3 className="text-xl font-black text-white leading-tight">
+              অভিনন্দন {welcomeBonusUser.username}!
+            </h3>
+            <p className="text-sm text-slate-300 mt-2 leading-relaxed">
+              আপনি নতুন অ্যাকাউন্ট খোলার জন্য <span className="text-emerald-400 font-black text-base">৫০ ৳ ফ্রি ব্যালেন্স</span> পেয়েছেন!
+            </p>
+            <div className="mt-4 p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-slate-400">
+              এই ব্যালেন্স দিয়ে এখনই লুডু, দাবা বা ক্যারামে ৫০ ৳ এন্ট্রি ফি দিয়ে ম্যাচ খেলা শুরু করতে পারবেন।
+            </div>
+            <button
+              onClick={() => {
+                setWelcomeBonusUser(null);
+                setActiveTab('games');
+              }}
+              className="w-full mt-5 py-3.5 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-black text-sm rounded-2xl shadow-xl glow-gold transition cursor-pointer"
+            >
+              এখনই গেম খেলুন (৫০ ৳ দিয়ে শুরু) ➔
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Tournaments Modal */}
       <TournamentsModal

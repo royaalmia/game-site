@@ -117,20 +117,20 @@ export default function CarromGameView({ match, gameState, currentUser, socket, 
           ))}
         </div>
 
-        {/* Carrom Board SVG */}
-        <div className="relative aspect-square w-full max-w-[460px] bg-amber-200/90 rounded-3xl border-8 border-amber-950 shadow-2xl p-4 overflow-hidden">
-          <svg viewBox="0 0 600 600" className="w-full h-full">
+        {/* Deluxe Realistic Carrom Board */}
+        <div className="relative aspect-square w-full max-w-[480px] bg-gradient-to-br from-amber-950 via-stone-900 to-amber-950 rounded-[2.5rem] border-[8px] border-amber-900/90 shadow-[0_25px_60px_rgba(0,0,0,0.85),inset_0_2px_4px_rgba(255,255,255,0.15)] p-3 sm:p-4 overflow-hidden">
+          <svg viewBox="0 0 600 600" className="w-full h-full rounded-2xl shadow-inner">
             {/* Board Background */}
-            <rect width="600" height="600" fill="#fde68a" />
+            <rect width="600" height="600" fill="#f8e7b9" />
             
             {/* Outer border & Baseline frame */}
-            <rect x="20" y="20" width="560" height="560" fill="none" stroke="#78350f" strokeWidth="4" />
+            <rect x="25" y="25" width="550" height="550" fill="none" stroke="#78350f" strokeWidth="5" />
             
-            {/* 4 Corner Pockets */}
-            <circle cx="45" cy="45" r="28" fill="#1e1b4b" stroke="#000" strokeWidth="3" />
-            <circle cx="555" cy="45" r="28" fill="#1e1b4b" stroke="#000" strokeWidth="3" />
-            <circle cx="45" cy="555" r="28" fill="#1e1b4b" stroke="#000" strokeWidth="3" />
-            <circle cx="555" cy="555" r="28" fill="#1e1b4b" stroke="#000" strokeWidth="3" />
+            {/* 4 Corner Pockets with Brass Trim */}
+            <circle cx="45" cy="45" r="30" fill="#020617" stroke="#b45309" strokeWidth="4" />
+            <circle cx="555" cy="45" r="30" fill="#020617" stroke="#b45309" strokeWidth="4" />
+            <circle cx="45" cy="555" r="30" fill="#020617" stroke="#b45309" strokeWidth="4" />
+            <circle cx="555" cy="555" r="30" fill="#020617" stroke="#b45309" strokeWidth="4" />
 
             {/* Center Circle */}
             <circle cx="300" cy="300" r="70" fill="none" stroke="#b45309" strokeWidth="3" />

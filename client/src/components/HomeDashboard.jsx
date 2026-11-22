@@ -95,18 +95,27 @@ export default function HomeDashboard({
 
   return (
     <div className="max-w-md mx-auto px-4 pb-28 space-y-4 font-sans">
-      {/* 1. Live Winners Rolling Ticker */}
-      <div className="bg-slate-900/90 border border-slate-800 rounded-2xl px-3.5 py-2 flex items-center justify-between text-xs overflow-hidden">
-        <div className="flex items-center gap-2">
+      {/* 1. Live Winners Rolling Ticker (Continuous Smooth Marquee) */}
+      <div className="bg-slate-900/90 border border-slate-800 rounded-2xl px-3 py-2 flex items-center gap-2.5 text-xs overflow-hidden shadow-lg relative">
+        <div className="flex items-center gap-1.5 shrink-0 z-10 bg-slate-900 pr-2 border-r border-slate-800">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-          <span className="text-amber-400 font-bold shrink-0">লাইভ জয়:</span>
-          <div className="flex items-center gap-1.5 truncate">
-            <span className="text-white font-bold">{currentWinner.name}</span>
-            <span className="text-slate-400 text-[11px]">({currentWinner.game})</span>
-            <span className="text-emerald-400 font-mono font-bold">+{currentWinner.amount} ৳</span>
+          <span className="text-amber-400 font-black text-[11px] shrink-0 uppercase tracking-wide">লাইভ জয়:</span>
+        </div>
+
+        <div className="overflow-hidden flex-1 relative whitespace-nowrap">
+          <div className="animate-marquee flex items-center gap-6">
+            {[...RECENT_WINNERS, ...RECENT_WINNERS].map((w, idx) => (
+              <div key={idx} className="inline-flex items-center gap-1.5 shrink-0 text-xs">
+                <span className="text-white font-bold">{w.name}</span>
+                <span className="text-slate-400 text-[11px]">({w.game})</span>
+                <span className="text-emerald-400 font-mono font-black">+{w.amount} ৳</span>
+                <span className="text-slate-600 mx-1">•</span>
+              </div>
+            ))}
           </div>
         </div>
-        <span className="text-[10px] text-slate-500 uppercase font-mono tracking-wider shrink-0 hidden sm:inline">
+
+        <span className="text-[9px] text-emerald-400/90 font-mono font-bold uppercase tracking-wider shrink-0 px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 z-10">
           LIVE
         </span>
       </div>

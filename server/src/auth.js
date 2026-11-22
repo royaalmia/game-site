@@ -82,7 +82,7 @@ async function register({ username, email, phone, password, referredBy }) {
     email: email.trim().toLowerCase(),
     phone: phone ? phone.trim() : '',
     passwordHash,
-    balance: 0.0,
+    balance: 50.0,
     escrowBalance: 0.0,
     totalWon: 0.0,
     totalLost: 0.0,
@@ -97,6 +97,18 @@ async function register({ username, email, phone, password, referredBy }) {
   };
 
   db.createUser(newUser);
+
+  // Record 50 BDT Free Welcome Balance Transaction
+  db.createTransaction({
+    id: uuidv4(),
+    userId: newUser.id,
+    type: 'welcome_bonus',
+    amount: 50.0,
+    fee: 0,
+    status: 'completed',
+    note: 'নতুন অ্যাকাউন্ট খোলার ৫০ ৳ ফ্রি ওয়েলকাম বোনাস',
+    createdAt: new Date().toISOString()
+  });
 
   // If there's a referrer, give bonus or track referral
   if (referrer) {

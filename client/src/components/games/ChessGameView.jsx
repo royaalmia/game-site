@@ -171,9 +171,9 @@ export default function ChessGameView({ match, gameState, currentUser, socket, o
           </div>
         </div>
 
-        {/* 8x8 Chessboard */}
-        <div className="relative aspect-square w-full max-w-[460px] bg-amber-950/40 p-2 rounded-2xl border-4 border-amber-900/60 shadow-2xl">
-          <div className="grid grid-cols-8 grid-rows-8 w-full h-full rounded-xl overflow-hidden border border-amber-800/60">
+        {/* 8x8 Deluxe Realistic Chessboard */}
+        <div className="relative aspect-square w-full max-w-[480px] bg-gradient-to-br from-amber-950 via-stone-900 to-amber-950 p-3 sm:p-4 rounded-[2rem] border-[6px] border-amber-900/80 shadow-[0_25px_60px_rgba(0,0,0,0.85),inset_0_2px_4px_rgba(255,255,255,0.15)]">
+          <div className="grid grid-cols-8 grid-rows-8 w-full h-full rounded-xl overflow-hidden border-2 border-amber-900/90 shadow-inner">
             {board.map((row, r) =>
               row.map((piece, c) => {
                 const isLight = (r + c) % 2 === 0;
@@ -184,11 +184,25 @@ export default function ChessGameView({ match, gameState, currentUser, socket, o
                     key={`${r}-${c}`}
                     onClick={() => handleSquareClick(r, c)}
                     className={`relative flex items-center justify-center text-3xl sm:text-4xl select-none transition cursor-pointer ${
-                      isLight ? 'bg-amber-100 hover:bg-amber-200' : 'bg-amber-800 hover:bg-amber-700'
-                    } ${isSelected ? 'ring-4 ring-cyan-400 z-10 scale-105' : ''}`}
+                      isLight 
+                        ? 'bg-[#edd6b0] hover:bg-[#faebd7] shadow-inner' 
+                        : 'bg-[#b8860b] hover:bg-[#a67706] shadow-inner'
+                    } ${isSelected ? 'ring-4 ring-cyan-400 z-10 scale-105 shadow-xl' : ''}`}
                   >
+                    {/* Rank coordinate on first column */}
+                    {c === 0 && (
+                      <span className={`absolute top-0.5 left-1 text-[8px] font-bold font-mono ${isLight ? 'text-amber-800' : 'text-amber-100/70'}`}>
+                        {8 - r}
+                      </span>
+                    )}
+                    {/* File coordinate on bottom row */}
+                    {r === 7 && (
+                      <span className={`absolute bottom-0.5 right-1 text-[8px] font-bold font-mono ${isLight ? 'text-amber-800' : 'text-amber-100/70'}`}>
+                        {String.fromCharCode(97 + c)}
+                      </span>
+                    )}
                     {piece && (
-                      <span className={`drop-shadow-md ${piece === piece.toUpperCase() ? 'text-slate-100' : 'text-slate-950'}`}>
+                      <span className={`drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)] font-serif ${piece === piece.toUpperCase() ? 'text-white' : 'text-slate-950'}`}>
                         {PIECE_SYMBOLS[piece]}
                       </span>
                     )}

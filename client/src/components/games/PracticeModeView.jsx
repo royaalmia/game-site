@@ -29,6 +29,35 @@ const BASE_SLOTS = {
   yellow: [[11, 11], [11, 12], [12, 11], [12, 12]]
 };
 
+function RealisticDice({ value = 1, isRolling = false }) {
+  const pipsMap = {
+    1: [[1, 1]],
+    2: [[0, 0], [2, 2]],
+    3: [[0, 0], [1, 1], [2, 2]],
+    4: [[0, 0], [0, 2], [2, 0], [2, 2]],
+    5: [[0, 0], [0, 2], [1, 1], [2, 0], [2, 2]],
+    6: [[0, 0], [0, 2], [1, 0], [1, 2], [2, 0], [2, 2]]
+  };
+  const activePips = pipsMap[value] || [[1, 1]];
+
+  return (
+    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br from-white via-slate-100 to-slate-200 border-2 border-slate-300 shadow-[0_8px_16px_rgba(0,0,0,0.5),inset_0_2px_3px_rgba(255,255,255,0.9)] p-2 grid grid-cols-3 grid-rows-3 transition-transform ${isRolling ? 'animate-spin' : ''}`}>
+      {Array.from({ length: 3 }).map((_, r) =>
+        Array.from({ length: 3 }).map((_, c) => {
+          const hasPip = activePips.some(([pr, pc]) => pr === r && pc === c);
+          return (
+            <div key={`${r}-${c}`} className="flex items-center justify-center">
+              {hasPip && (
+                <div className={`w-2 h-2 rounded-full ${value === 1 ? 'bg-red-600' : 'bg-slate-900'} shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]`} />
+              )}
+            </div>
+          );
+        })
+      )}
+    </div>
+  );
+}
+
 export default function PracticeModeView({ currentUser, onLeave }) {
   const [tokensPlayer, setTokensPlayer] = useState([
     { id: 0, position: -1, stepCount: 0 },
@@ -238,16 +267,23 @@ export default function PracticeModeView({ currentUser, onLeave }) {
         </span>
       </div>
 
-      {/* Mini Board */}
-      <div className="aspect-square w-full bg-slate-950 p-3 rounded-3xl border-4 border-slate-800 shadow-2xl relative">
-        <div className="grid grid-cols-15 grid-rows-15 w-full h-full gap-0.5 bg-slate-800/40 rounded-2xl overflow-hidden relative">
+      {/* Deluxe 15x15 Realistic Board */}
+      <div className="aspect-square w-full max-w-[480px] mx-auto bg-gradient-to-br from-amber-950 via-stone-900 to-amber-950 p-2.5 sm:p-3.5 rounded-[2rem] border-[6px] border-amber-900/80 shadow-[0_20px_50px_rgba(0,0,0,0.8),inset_0_2px_4px_rgba(255,255,255,0.15)] relative">
+        <div className="grid grid-cols-15 grid-rows-15 w-full h-full gap-0.5 bg-slate-950 rounded-2xl overflow-hidden relative shadow-inner">
           {Array.from({ length: 15 }).map((_, r) =>
             Array.from({ length: 15 }).map((_, c) => {
               let bg = 'bg-slate-900/90';
-              if (r < 6 && c < 6) bg = 'bg-red-950/60 border border-red-900/30';
-              if (r > 8 && c > 8) bg = 'bg-yellow-950/60 border border-yellow-900/30';
-              if (r === 7 && c >= 1 && c <= 5) bg = 'bg-red-600/80';
-              if (r === 7 && c >= 9 && c <= 13) bg = 'bg-yellow-500/80';
+              let isStar = false;
+              if (r < 6 && c < 6) bg = 'bg-gradient-to-br from-red-950 to-red-900/80 border border-red-800/40 shadow-inner';
+              if (r > 8 && c > 8) bg = 'bg-gradient-to-br from-amber-950 to-yellow-900/80 border border-yellow-800/40 shadow-inner';
+              if (r === 7 && c >= 1 && c <= 5) bg = 'bg-red-600/90 shadow-inner';
+              if (r === 7 && c >= 9 && c <= 13) bg = 'bg-yellow-500/90 shadow-inner';
+              if (r === 6 && c === 1) { bg = 'bg-red-600'; isStar = true; }
+              if (r === 8 && c === 13) { bg = 'bg-yellow-500'; isStar = true; }
+              if ((r === 2 && c === 6) || (r === 6 && c === 12) || (r === 12 && c === 8) || (r === 8 && c === 2)) {
+                isStar = true;
+                bg = 'bg-slate-800/90';
+              }
               if (r >= 6 && r <= 8 && c >= 6 && c <= 8) bg = 'bg-gradient-to-br from-red-600 to-yellow-500';
 
               // Tokens check
@@ -285,16 +321,19 @@ export default function PracticeModeView({ currentUser, onLeave }) {
 
               return (
                 <div key={`${r}-${c}`} className={`relative flex items-center justify-center text-[7px] ${bg}`}>
+                  {isStar && !(r >= 6 && r <= 8 && c >= 6 && c <= 8) && (
+                    <span className="text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.9)] text-[10px] font-black">★</span>
+                  )}
                   {redToken && (
                     <button
                       onClick={() => handlePlayerMove(redToken.id)}
-                      className="w-4/5 h-4/5 rounded-full bg-red-500 border border-white text-white font-bold flex items-center justify-center shadow-md animate-pulse cursor-pointer"
+                      className="w-[85%] h-[85%] rounded-full bg-gradient-to-b from-red-400 via-red-500 to-red-700 text-white font-black flex items-center justify-center shadow-[0_4px_8px_rgba(0,0,0,0.7),inset_0_2px_3px_rgba(255,255,255,0.45)] ring-1 ring-red-200 animate-pulse cursor-pointer z-10"
                     >
                       {redToken.id + 1}
                     </button>
                   )}
                   {botToken && (
-                    <div className="w-4/5 h-4/5 rounded-full bg-yellow-400 border border-slate-900 text-slate-950 font-bold flex items-center justify-center shadow-md">
+                    <div className="w-[85%] h-[85%] rounded-full bg-gradient-to-b from-yellow-300 via-amber-400 to-amber-600 text-slate-950 font-black flex items-center justify-center shadow-[0_4px_8px_rgba(0,0,0,0.7),inset_0_2px_3px_rgba(255,255,255,0.45)] ring-1 ring-yellow-100 z-10">
                       🤖
                     </div>
                   )}
@@ -305,18 +344,28 @@ export default function PracticeModeView({ currentUser, onLeave }) {
         </div>
       </div>
 
-      {/* Action Dice Button */}
-      <div className="flex items-center gap-3">
+      {/* Realistic Dice & Action Controls */}
+      <div className="p-3 bg-slate-900 border border-slate-800 rounded-2xl flex items-center justify-between shadow-xl">
+        <div className="flex items-center gap-3">
+          <RealisticDice value={dice || 1} />
+          <div className="flex flex-col text-left">
+            <span className="text-[10px] text-slate-400">ডাইস পয়েন্ট</span>
+            <span className="text-base font-black text-amber-400 font-mono">
+              {dice ? `${dice}` : '—'}
+            </span>
+          </div>
+        </div>
+
         <button
           onClick={handlePlayerRoll}
           disabled={turn !== 'player' || hasRolled || winner}
-          className={`flex-1 py-3.5 rounded-2xl font-black text-xs flex items-center justify-center gap-2 shadow-xl transition ${
+          className={`px-5 py-3 rounded-xl font-black text-xs flex items-center gap-2 shadow-xl transition ${
             turn === 'player' && !hasRolled && !winner
               ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 glow-gold scale-[1.02] cursor-pointer'
               : 'bg-slate-800 text-slate-500 cursor-not-allowed opacity-60'
           }`}
         >
-          🎲 {hasRolled ? 'Tap Highlighted Token to Move!' : 'ROLL DICE (Your Turn)'}
+          {hasRolled ? '👉 চাল দিতে গুটি স্পর্শ করুন' : 'ডাইস রোল করুন'}
         </button>
       </div>
 

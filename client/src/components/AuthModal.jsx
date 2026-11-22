@@ -49,7 +49,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialMode 
         setAuthToken(res.token);
         localStorage.setItem('ludu_user', JSON.stringify(res.user));
         sound.playWin();
-        onAuthSuccess(res.user);
+        onAuthSuccess(res.user, false);
         onClose();
       } else {
         const res = await apiFetch('/api/auth/register', {
@@ -65,7 +65,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialMode 
         setAuthToken(res.token);
         localStorage.setItem('ludu_user', JSON.stringify(res.user));
         sound.playWin();
-        onAuthSuccess(res.user);
+        onAuthSuccess(res.user, true);
         onClose();
       }
     } catch (err) {
