@@ -186,7 +186,7 @@ export default function PlayerProfileExpanded({
             activeTab === 'stats' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400'
           }`}
         >
-          Overview
+          পরিসংখ্যান
         </button>
         <button
           onClick={() => setActiveTab('history')}
@@ -194,7 +194,7 @@ export default function PlayerProfileExpanded({
             activeTab === 'history' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400'
           }`}
         >
-          Match History
+          ম্যাচ হিস্ট্রি
         </button>
         <button
           onClick={() => setActiveTab('settings')}
@@ -202,7 +202,7 @@ export default function PlayerProfileExpanded({
             activeTab === 'settings' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400'
           }`}
         >
-          Settings
+          সেটিংস
         </button>
       </div>
 
@@ -212,15 +212,15 @@ export default function PlayerProfileExpanded({
           {/* Quick Metrics */}
           <div className="grid grid-cols-3 gap-2 text-center">
             <div className="p-3 bg-slate-900 border border-slate-800 rounded-2xl">
-              <span className="text-[10px] text-slate-400 block mb-0.5">Win Rate</span>
+              <span className="text-[10px] text-slate-400 block mb-0.5">উইন রেট</span>
               <span className="font-mono text-base font-black text-cyan-400">{winRate}%</span>
             </div>
             <div className="p-3 bg-slate-900 border border-slate-800 rounded-2xl">
-              <span className="text-[10px] text-slate-400 block mb-0.5">Matches Won</span>
+              <span className="text-[10px] text-slate-400 block mb-0.5">জয়ী ম্যাচ</span>
               <span className="font-mono text-base font-black text-emerald-400">{user?.matchesWon || 0}</span>
             </div>
             <div className="p-3 bg-slate-900 border border-slate-800 rounded-2xl">
-              <span className="text-[10px] text-slate-400 block mb-0.5">Total Profit</span>
+              <span className="text-[10px] text-slate-400 block mb-0.5">মোট লাভ</span>
               <span className="font-mono text-base font-black text-amber-400">
                 {(user?.totalWon || 0).toFixed(0)} ৳
               </span>
@@ -229,7 +229,7 @@ export default function PlayerProfileExpanded({
 
           {/* Avatar Customizer Gallery */}
           <div className="p-4 bg-slate-900 border border-slate-800 rounded-3xl space-y-2">
-            <span className="text-xs font-bold text-white block">Choose Avatar Photo</span>
+            <span className="text-xs font-bold text-white block">আপনার প্রোফাইল অবতার বেছে নিন</span>
             <div className="grid grid-cols-4 gap-2 pt-1">
               {AVATAR_OPTIONS.map((av, idx) => (
                 <button
@@ -248,7 +248,7 @@ export default function PlayerProfileExpanded({
           {/* Referral Card */}
           <div className="p-4 bg-slate-900 border border-slate-800 rounded-3xl flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold text-white block">Invite Friends & Earn 10 ৳</span>
+              <span className="text-xs font-bold text-white block">বন্ধুদের রেফার করুন (বোনাস ১০ ৳)</span>
               <span className="text-[11px] font-mono text-amber-400">{user?.referralCode}</span>
             </div>
             <button
@@ -256,7 +256,7 @@ export default function PlayerProfileExpanded({
               className="px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-black text-xs flex items-center gap-1 shadow-md"
             >
               {copiedCode ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-              {copiedCode ? 'Copied' : 'Share Link'}
+              {copiedCode ? 'কপি হয়েছে' : 'লিংক কপি'}
             </button>
           </div>
         </div>
@@ -311,7 +311,7 @@ export default function PlayerProfileExpanded({
           {/* Audio toggle */}
           <div className="p-3.5 bg-slate-900 border border-slate-800 rounded-2xl flex items-center justify-between">
             <span className="font-bold text-white flex items-center gap-2">
-              <Volume2 className="w-4 h-4 text-amber-400" /> Sound Effects & Chimes
+              <Volume2 className="w-4 h-4 text-amber-400" /> সাউন্ড ইফেক্ট ও মিউজিক
             </span>
             <button
               onClick={() => {
@@ -322,17 +322,17 @@ export default function PlayerProfileExpanded({
                 soundOn ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-400'
               }`}
             >
-              {soundOn ? 'Enabled' : 'Muted'}
+              {soundOn ? 'চালু আছে' : 'মিউট করা'}
             </button>
           </div>
 
           {/* Active Sessions */}
           <div className="p-3.5 bg-slate-900 border border-slate-800 rounded-2xl space-y-1">
             <span className="font-bold text-white flex items-center gap-2">
-              <Shield className="w-4 h-4 text-cyan-400" /> Active Session
+              <Shield className="w-4 h-4 text-cyan-400" /> অ্যাকাউন্ট নিরাপত্তা
             </span>
-            <span className="text-[11px] text-slate-400 block">Device: Mobile Web / Chrome</span>
-            <span className="text-[10px] text-emerald-400 font-mono">🟢 Secure Token Encrypted</span>
+            <span className="text-[11px] text-slate-400 block">ডিভাইস: মোবাইল ও ব্রাউজার সেশন</span>
+            <span className="text-[10px] text-emerald-400 font-mono">🟢 ১০০% নিরাপদ এনক্রিপ্টেড সেশন</span>
           </div>
 
           {/* Support in Settings */}
@@ -341,7 +341,7 @@ export default function PlayerProfileExpanded({
             className="p-3.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-2xl flex items-center justify-between cursor-pointer transition"
           >
             <span className="font-bold text-white flex items-center gap-2">
-              <Headphones className="w-4 h-4 text-purple-400" /> কাস্টমার সাপোর্ট ও অভিযোগ
+              <Headphones className="w-4 h-4 text-purple-400" /> ২৪/৭ কাস্টমার সাপোর্ট ও হেল্প
             </span>
             <span className="text-[11px] text-purple-400 font-bold">ওপেন করুন ➔</span>
           </div>
@@ -349,9 +349,9 @@ export default function PlayerProfileExpanded({
           {/* Logout Button */}
           <button
             onClick={onLogout}
-            className="w-full py-3 bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 border border-rose-600/30 rounded-2xl font-black text-xs transition"
+            className="w-full py-3 bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 border border-rose-600/30 rounded-2xl font-black text-xs transition cursor-pointer"
           >
-            {t.log_out}
+            লগআউট করুন
           </button>
         </div>
       )}

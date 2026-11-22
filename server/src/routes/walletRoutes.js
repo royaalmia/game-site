@@ -52,6 +52,11 @@ router.get('/transactions', authMiddleware, (req, res) => {
   res.json({ transactions });
 });
 
+router.get('/history', authMiddleware, (req, res) => {
+  const transactions = db.getTransactions({ userId: req.user.id });
+  res.json({ transactions });
+});
+
 // Claim Real Daily Streak Bonus (+20 BDT)
 router.post('/claim-daily', authMiddleware, (req, res) => {
   try {

@@ -9,7 +9,7 @@ const db = require('../db');
 router.use(adminMiddleware);
 
 // Admin Dashboard KPI Stats
-router.get('/stats', (req, res) => {
+const getStatsHandler = (req, res) => {
   const users = db.getUsers();
   const transactions = db.getTransactions();
   const matches = db.getMatches();
@@ -39,7 +39,10 @@ router.get('/stats', (req, res) => {
   };
 
   res.json({ stats });
-});
+};
+
+router.get('/stats', getStatsHandler);
+router.get('/overview', getStatsHandler);
 
 // Get users list
 router.get('/users', (req, res) => {
