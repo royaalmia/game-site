@@ -38,7 +38,7 @@ export default function ChessGameView({ match, gameState, currentUser, socket, o
     if (!socket) return;
 
     socket.on('chess_moved', (data) => {
-      sound.playTokenMove();
+      sound.playChessMove();
       setSelectedSquare(null);
     });
 

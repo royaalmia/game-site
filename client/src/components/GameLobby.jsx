@@ -275,7 +275,7 @@ export default function GameLobby({
               }`}
             >
               <div className="text-sm font-black text-white">১ বনাম ১ ডুয়েট</div>
-              <span className="text-[10px] text-slate-400">২ জন মুখোমুখি (Red vs Yellow)</span>
+              <span className="text-[10px] text-slate-400">২ জন মুখোমুখি ম্যাচ</span>
             </button>
             <button
               onClick={() => setSelectedMode('4player')}
@@ -348,7 +348,7 @@ export default function GameLobby({
               onClick={handleJoinQueue}
               className="w-full py-4 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-black text-base rounded-2xl shadow-xl glow-gold transition flex items-center justify-center gap-2 cursor-pointer active:scale-95"
             >
-              <Zap className="w-5 h-5 fill-current" /> দ্রুত খেলুন (Quick Match) — {selectedStake} ৳
+              <Zap className="w-5 h-5 fill-current" /> দ্রুত খেলুন — {selectedStake} ৳
             </button>
           )}
 
@@ -356,7 +356,7 @@ export default function GameLobby({
             onClick={() => handleCreateRoom(true)}
             className="w-full py-3 bg-slate-800/80 hover:bg-slate-700 text-white font-bold text-xs rounded-2xl border border-slate-700 transition flex items-center justify-center gap-2 cursor-pointer"
           >
-            <Plus className="w-4 h-4 text-amber-400" /> বন্ধুদের জন্য রুম তৈরি করুন (Create Room)
+            <Plus className="w-4 h-4 text-amber-400" /> বন্ধুদের জন্য রুম তৈরি করুন
           </button>
         </div>
       </div>

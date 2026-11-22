@@ -17,7 +17,7 @@ import LeaderboardModal from './components/LeaderboardModal';
 import TournamentsModal from './components/TournamentsModal';
 import DisputesModal from './components/DisputesModal';
 import InvitePopupModal from './components/InvitePopupModal';
-import LobbyChatDrawer from './components/LobbyChatDrawer';
+import FloatingAiChat from './components/FloatingAiChat';
 import confetti from 'canvas-confetti';
 import { sound } from './utils/sound';
 import { apiFetch, getSocket, setAuthToken } from './utils/api';
@@ -72,6 +72,30 @@ export default function App() {
 
   // Incoming Match Challenge
   const [incomingInvite, setIncomingInvite] = useState(null);
+
+  // 📱 PWA Install Prompt State
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+  useEffect(() => {
+    const handleBeforeInstall = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+  }, []);
+
+  const handleInstallPwa = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setDeferredPrompt(null);
+      }
+    } else {
+      alert('মোবাইলে ইনস্টল করতে ব্রাউজারের থ্রি-ডট (⋮) মেনু থেকে "Install app" বা "Add to Home screen" চাপুন।');
+    }
+  };
 
   // Sync route on browser navigation (Back / Forward button)
   useEffect(() => {
@@ -308,6 +332,7 @@ export default function App() {
         onOpenTournaments={() => setTournamentsModalOpen(true)}
         onOpenDisputes={() => setDisputesModalOpen(true)}
         onLogout={handleLogout}
+        onInstallPwa={handleInstallPwa}
       />
 
       {/* Main Content View Switcher */}
@@ -450,12 +475,10 @@ export default function App() {
         onDecline={handleDeclineInvite}
       />
 
-      {/* Global Live Lobby Banter Chat (visible in main lobby when logged in) */}
-      {view === 'main' && activeTab === 'home' && currentUser && (
-        <LobbyChatDrawer
-          socket={socket}
+      {/* 🎧 24/7 Smart AI Live Support Assistant (Matching 3rd Image) */}
+      {view === 'main' && (
+        <FloatingAiChat
           currentUser={currentUser}
-          onlineCount={onlineCount}
           onOpenAuth={handleOpenAuth}
         />
       )}

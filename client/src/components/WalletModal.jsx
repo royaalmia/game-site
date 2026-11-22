@@ -186,7 +186,7 @@ export default function WalletModal({
                 : 'text-slate-400 hover:text-white bg-slate-900/40'
             }`}
           >
-            <ArrowDownRight className="w-4 h-4" /> রিচার্জ (Deposit)
+            <ArrowDownRight className="w-4 h-4" /> রিচার্জ
           </button>
           <button
             onClick={() => { setActiveTab('withdraw'); setError(''); }}
@@ -196,7 +196,7 @@ export default function WalletModal({
                 : 'text-slate-400 hover:text-white bg-slate-900/40'
             }`}
           >
-            <ArrowUpRight className="w-4 h-4" /> উত্তোলন (Withdraw)
+            <ArrowUpRight className="w-4 h-4" /> উত্তোলন
           </button>
           <button
             onClick={() => { setActiveTab('history'); setError(''); }}
@@ -529,10 +529,10 @@ export default function WalletModal({
                   >
                     <div>
                       <span className="font-bold text-white block capitalize text-xs">
-                        {tx.type === 'deposit' ? 'টাকা রিচার্জ (Deposit)' :
-                         tx.type === 'withdraw' ? 'টাকা উত্তোলন (Withdraw)' :
-                         tx.type === 'match_win' ? 'ম্যাচ জয় (Win)' :
-                         tx.type === 'match_entry' ? 'ম্যাচ ফি (Entry)' :
+                        {tx.type === 'deposit' ? 'টাকা রিচার্জ' :
+                         tx.type === 'withdraw' ? 'টাকা উত্তোলন' :
+                         tx.type === 'match_win' ? 'ম্যাচ জয়' :
+                         tx.type === 'match_entry' ? 'ম্যাচ এন্ট্রি ফি' :
                          tx.type === 'daily_bonus' ? 'দৈনিক বোনাস' : tx.type}
                       </span>
                       <span className="text-[10px] text-slate-400">

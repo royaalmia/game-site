@@ -58,7 +58,7 @@ export default function CarromGameView({ match, gameState, currentUser, socket, 
 
   const handleStrike = () => {
     if (!isMyTurn) return;
-    sound.playClick();
+    sound.playCarromStrike();
     socket.emit('carrom_strike', {
       roomId: match.id,
       userId: currentUser.id,
