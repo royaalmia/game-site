@@ -1,7 +1,10 @@
 import { io } from 'socket.io-client';
 
-// Real API Base URL: empty string for same-origin proxy, or VITE_API_URL for remote domain
-const API_BASE = import.meta.env.VITE_API_URL || '';
+// Production Live Backend URL from Render
+const PROD_BACKEND = 'https://ludu-backend-gnid.onrender.com';
+
+// Real API Base URL: VITE_API_URL if configured, otherwise production Render backend when deployed
+const API_BASE = import.meta.env.VITE_API_URL || (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' ? PROD_BACKEND : '');
 
 export const getAuthToken = () => localStorage.getItem('ludu_token');
 export const setAuthToken = (token) => {
