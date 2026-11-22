@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { apiFetch, setAuthToken } from '../utils/api';
 import { sound } from '../utils/sound';
-import { X, Lock, Mail, User, Phone, Sparkles, AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { X, Lock, Mail, User, Phone, Sparkles, AlertCircle, ArrowRight } from 'lucide-react';
 
-export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
-  const [isLogin, setIsLogin] = useState(true);
+export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialMode = 'login' }) {
+  const [isLogin, setIsLogin] = useState(initialMode !== 'register');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -15,6 +15,13 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [referredBy, setReferredBy] = useState('');
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsLogin(initialMode !== 'register');
+      setError('');
+    }
+  }, [isOpen, initialMode]);
 
   useEffect(() => {
     // Check if referral code exists in URL
@@ -68,12 +75,6 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
     }
   };
 
-  const handleQuickDemoLogin = (emailStr, passStr) => {
-    setEmailOrUsername(emailStr);
-    setPassword(passStr);
-    setIsLogin(true);
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/85 backdrop-blur-md">
       <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
@@ -93,8 +94,8 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
           </h2>
           <p className="text-xs text-amber-400 font-bold mt-1">
             {isLogin 
-              ? 'রিয়েল ক্যাশ ম্যাচ খেলতে সাইন ইন করুন' 
-              : 'রেজিস্ট্রেশন করলেই ইনস্ট্যান্ট ৫০ ৳ সাইন-আপ বোনাস'}
+              ? 'ম্যাচ খেলতে সাইন ইন করুন' 
+              : 'নতুন অ্যাকাউন্ট তৈরি করে খেলা শুরু করুন'}
           </p>
         </div>
 
@@ -114,7 +115,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
               isLogin ? 'bg-amber-500 text-slate-950 shadow-md font-black' : 'text-slate-400 hover:text-white'
             }`}
           >
-            লগইন (Log In)
+            লগইন
           </button>
           <button
             type="button"
@@ -123,7 +124,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
               !isLogin ? 'bg-amber-500 text-slate-950 shadow-md font-black' : 'text-slate-400 hover:text-white'
             }`}
           >
-            রেজিস্ট্রেশন (+৫০ ৳)
+            রেজিস্ট্রেশন
           </button>
         </div>
 
@@ -151,7 +152,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                   <input
                     type="password"
                     required
-                    placeholder="••••••••"
+                    placeholder="পাসওয়ার্ড লিখুন"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-white focus:outline-none focus:border-amber-500"
@@ -162,13 +163,13 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
           ) : (
             <>
               <div>
-                <label className="text-slate-300 font-semibold block mb-1">ইউজারনেম (ইংরেজি):</label>
+                <label className="text-slate-300 font-semibold block mb-1">ইউজারনেম:</label>
                 <div className="relative">
                   <User className="w-4 h-4 absolute left-3 top-2.5 text-slate-500" />
                   <input
                     type="text"
                     required
-                    placeholder="যেমন: shakib75"
+                    placeholder="ইউজারনেম দিন"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-white focus:outline-none focus:border-amber-500"
@@ -183,7 +184,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                   <input
                     type="email"
                     required
-                    placeholder="you@email.com"
+                    placeholder="আপনার ইমেইল এড্রেস"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-white focus:outline-none focus:border-amber-500"
@@ -192,13 +193,13 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
               </div>
 
               <div>
-                <label className="text-slate-300 font-semibold block mb-1">মোবাইল নম্বর (বিকাশ/নগদ):</label>
+                <label className="text-slate-300 font-semibold block mb-1">মোবাইল নম্বর:</label>
                 <div className="relative">
                   <Phone className="w-4 h-4 absolute left-3 top-2.5 text-slate-500" />
                   <input
                     type="tel"
                     required
-                    placeholder="01XXXXXXXXX"
+                    placeholder="০১৭XXXXXXXX"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-white focus:outline-none focus:border-amber-500 font-mono"
@@ -224,7 +225,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
               {referredBy && (
                 <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px] flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span>রেফারাল কোড যুক্ত হয়েছে: <strong>{referredBy}</strong> (+১০ ৳ বোনাস)</span>
+                  <span>রেফারাল কোড যুক্ত হয়েছে: <strong>{referredBy}</strong></span>
                 </div>
               )}
             </>
@@ -235,9 +236,36 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
             disabled={loading}
             className="w-full py-3 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-black text-sm rounded-xl shadow-lg glow-gold transition flex items-center justify-center gap-2 cursor-pointer mt-2"
           >
-            {loading ? 'প্রসেসিং হচ্ছে...' : isLogin ? 'লগইন করুন' : 'রেজিস্ট্রেশন সম্পন্ন করুন (+৫০ ৳ বোনাস)'}
+            {loading ? 'প্রসেসিং হচ্ছে...' : isLogin ? 'লগইন করুন' : 'রেজিস্ট্রেশন সম্পন্ন করুন'}
             <ArrowRight className="w-4 h-4" />
           </button>
+
+          {/* Prompt to switch between login and register */}
+          <div className="text-center pt-3 mt-3 border-t border-slate-800">
+            {isLogin ? (
+              <p className="text-xs text-slate-400">
+                অ্যাকাউন্ট নেই?{' '}
+                <button
+                  type="button"
+                  onClick={() => { setIsLogin(false); setError(''); }}
+                  className="text-amber-400 hover:text-amber-300 font-bold underline cursor-pointer ml-1"
+                >
+                  রেজিস্ট্রেশন করুন
+                </button>
+              </p>
+            ) : (
+              <p className="text-xs text-slate-400">
+                ইতিমধ্যে অ্যাকাউন্ট আছে?{' '}
+                <button
+                  type="button"
+                  onClick={() => { setIsLogin(true); setError(''); }}
+                  className="text-amber-400 hover:text-amber-300 font-bold underline cursor-pointer ml-1"
+                >
+                  লগইন করুন
+                </button>
+              </p>
+            )}
+          </div>
         </form>
       </div>
     </div>

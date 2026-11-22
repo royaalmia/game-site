@@ -146,16 +146,16 @@ export default function Navbar({
         ) : (
           <div className="flex items-center gap-2">
             <button
-              onClick={onOpenAuth}
+              onClick={() => onOpenAuth('login')}
               className="px-3.5 py-2 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold text-xs transition cursor-pointer flex items-center gap-1.5"
             >
               <LogIn className="w-4 h-4 text-amber-400" /> লগইন
             </button>
             <button
-              onClick={onOpenAuth}
+              onClick={() => onOpenAuth('register')}
               className="px-4 py-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs shadow-lg glow-gold transition cursor-pointer hidden sm:flex items-center gap-1"
             >
-              রেজিস্ট্রেশন (+৫০ ৳)
+              রেজিস্ট্রেশন
             </button>
           </div>
         )}

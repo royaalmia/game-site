@@ -82,7 +82,7 @@ async function register({ username, email, phone, password, referredBy }) {
     email: email.trim().toLowerCase(),
     phone: phone ? phone.trim() : '',
     passwordHash,
-    balance: 50.0, // Welcome bonus of 50 BDT so user can immediately test games!
+    balance: 0.0,
     escrowBalance: 0.0,
     totalWon: 0.0,
     totalLost: 0.0,

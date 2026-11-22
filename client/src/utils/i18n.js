@@ -93,12 +93,12 @@ export const translations = {
     online_count: "জন লাইভ অনলাইন",
     balance: "ব্যালেন্স",
     add_money: "টাকা জমা",
-    sign_in: "লগইন / সাইনআপ",
+    sign_in: "লগইন",
     
     // Home Dashboard
     hero_title: "লাইভ স্কিল গেমিং এরিনা",
     hero_subtitle: "১v১ ও টিম ম্যাচে সরাসরি খেলুন — ৫% এসক্রো নিশ্চয়তায় ইনস্ট্যান্ট পেআউট।",
-    claim_bonus: "দৈনিক বোনাস নিন (+২০ ৳)",
+    claim_bonus: "দৈনিক রিওয়ার্ড নিন",
     bonus_claimed: "বোনাস গ্রহণ সম্পন্ন!",
     online_friends_title: "অনলাইন ফ্রেন্ডস",
     no_online_friends: "বর্তমানে কোনো বন্ধু অনলাইনে নেই। বন্ধুদের ইনভাইট করুন!",

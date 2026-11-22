@@ -137,7 +137,7 @@ export default function HomeDashboard({
               }`}
             >
               <Gift className="w-3.5 h-3.5" />
-              {dailyClaimed ? 'সংগৃহীত' : '+২০ ৳ বোনাস'}
+              {dailyClaimed ? 'সংগৃহীত' : 'দৈনিক রিওয়ার্ড'}
             </button>
           </div>
 
@@ -178,7 +178,7 @@ export default function HomeDashboard({
           <div className="relative z-10 space-y-2">
             <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] font-bold">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              রেজিস্ট্রেশনে ৫০ ৳ বোনাস
+              রিয়েল মাল্টিপ্লেয়ার গেমিং
             </div>
 
             <h2 className="text-xl font-black text-white leading-tight">
@@ -190,10 +190,10 @@ export default function HomeDashboard({
 
             <div className="pt-1 flex items-center gap-2.5">
               <button
-                onClick={onOpenAuth}
+                onClick={() => onOpenAuth('login')}
                 className="flex-1 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs rounded-2xl shadow-xl transition transform active:scale-95 cursor-pointer flex items-center justify-center gap-1.5"
               >
-                <LogIn className="w-4 h-4" /> লগইন / অ্যাকাউন্ট
+                <LogIn className="w-4 h-4" /> লগইন
               </button>
 
               <button

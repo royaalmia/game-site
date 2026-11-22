@@ -56,9 +56,16 @@ export default function App() {
     tab: 'deposit',
     amount: ''
   });
-  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authModal, setAuthModal] = useState({ isOpen: false, mode: 'login' });
   const [tournamentsModalOpen, setTournamentsModalOpen] = useState(false);
   const [disputesModalOpen, setDisputesModalOpen] = useState(false);
+
+  const handleOpenAuth = (mode = 'login') => {
+    setAuthModal({
+      isOpen: true,
+      mode: typeof mode === 'string' ? mode : 'login'
+    });
+  };
 
   // Incoming Match Challenge
   const [incomingInvite, setIncomingInvite] = useState(null);
@@ -81,7 +88,7 @@ export default function App() {
 
   const handleOpenWallet = (options = {}) => {
     if (!currentUser) {
-      setAuthModalOpen(true);
+      handleOpenAuth('login');
       return;
     }
     setWalletModalConfig({
@@ -93,7 +100,7 @@ export default function App() {
 
   const handleTabChange = (tabId) => {
     if (['games', 'friends', 'profile'].includes(tabId) && !currentUser) {
-      setAuthModalOpen(true);
+      handleOpenAuth('login');
       return;
     }
     setActiveTab(tabId);
@@ -221,7 +228,7 @@ export default function App() {
   };
 
   const handleInviteFriendToMatch = (friend) => {
-    if (!currentUser) return setAuthModalOpen(true);
+    if (!currentUser) return handleOpenAuth('login');
     socket.emit('invite_friend_to_match', {
       fromUserId: currentUser.id,
       toUserId: friend.id,
@@ -233,7 +240,7 @@ export default function App() {
   };
 
   const handleJoinByCodeFromHome = (code) => {
-    if (!currentUser) return setAuthModalOpen(true);
+    if (!currentUser) return handleOpenAuth('login');
     setSelectedGameForLobby('ludo');
     setActiveTab('games');
     if (socket) {
@@ -282,15 +289,15 @@ export default function App() {
       <Navbar
         currentUser={currentUser}
         onlineCount={onlineCount}
-        onOpenAuth={() => setAuthModalOpen(true)}
+        onOpenAuth={handleOpenAuth}
         onOpenWallet={handleOpenWallet}
         onOpenProfile={() => {
-          if (!currentUser) return setAuthModalOpen(true);
+          if (!currentUser) return handleOpenAuth('login');
           setView('main'); 
           setActiveTab('profile'); 
         }}
         onOpenFriends={() => { 
-          if (!currentUser) return setAuthModalOpen(true);
+          if (!currentUser) return handleOpenAuth('login');
           setView('main'); 
           setActiveTab('friends'); 
         }}
@@ -356,14 +363,14 @@ export default function App() {
                 lang={lang}
                 onSelectGame={(gameId) => {
                   if (!currentUser) {
-                    setAuthModalOpen(true);
+                    handleOpenAuth('login');
                     return;
                   }
                   setSelectedGameForLobby(gameId);
                   setActiveTab('games');
                 }}
                 onOpenWallet={handleOpenWallet}
-                onOpenAuth={() => setAuthModalOpen(true)}
+                onOpenAuth={handleOpenAuth}
                 onOpenTournaments={() => setTournamentsModalOpen(true)}
                 onSelectTab={handleTabChange}
                 onInviteFriend={handleInviteFriendToMatch}
@@ -381,7 +388,7 @@ export default function App() {
                   initialGame={selectedGameForLobby}
                   onMatchStarted={handleMatchStarted}
                   onOpenWallet={handleOpenWallet}
-                  onOpenAuth={() => setAuthModalOpen(true)}
+                  onOpenAuth={handleOpenAuth}
                 />
               </div>
             )}
@@ -427,7 +434,7 @@ export default function App() {
           currentTab={activeTab}
           onChangeTab={handleTabChange}
           currentUser={currentUser}
-          onOpenAuth={() => setAuthModalOpen(true)}
+          onOpenAuth={handleOpenAuth}
           lang={lang}
         />
       )}
@@ -445,7 +452,7 @@ export default function App() {
           socket={socket}
           currentUser={currentUser}
           onlineCount={onlineCount}
-          onOpenAuth={() => setAuthModalOpen(true)}
+          onOpenAuth={handleOpenAuth}
         />
       )}
 
@@ -461,8 +468,9 @@ export default function App() {
 
       {/* Login & Register Modal */}
       <AuthModal
-        isOpen={authModalOpen}
-        onClose={() => setAuthModalOpen(false)}
+        isOpen={authModal.isOpen}
+        initialMode={authModal.mode}
+        onClose={() => setAuthModal(prev => ({ ...prev, isOpen: false }))}
         onAuthSuccess={(user) => {
           setCurrentUser(user);
           refreshUser();
