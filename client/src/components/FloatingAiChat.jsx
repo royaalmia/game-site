@@ -4,6 +4,7 @@ import { sound } from '../utils/sound';
 
 export default function FloatingAiChat({ currentUser, onOpenAuth }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDismissed, setIsDismissed] = useState(false);
   const [messages, setMessages] = useState([
     {
       id: 'welcome',
@@ -90,50 +91,67 @@ export default function FloatingAiChat({ currentUser, onOpenAuth }) {
     'বন্ধুদের সাথে কিভাবে খেলব?'
   ];
 
+  if (isDismissed) return null;
+
   return (
     <>
       {/* 🎧 Floating Support Agent Avatar Button (Matching 3rd Image) */}
       {!isOpen && (
-        <button
-          onClick={() => {
-            sound.playClick();
-            setIsOpen(true);
-          }}
-          title="২৪/৭ লাইভ সাপোর্ট ও হেল্প"
-          className="fixed bottom-20 right-3.5 sm:bottom-6 sm:right-6 z-40 group cursor-pointer transition-transform transform hover:scale-110 active:scale-95"
-        >
-          <div className="relative w-14 h-14 rounded-full bg-[#0b1c3d] p-1 border-2 border-cyan-400 shadow-[0_8px_20px_rgba(6,182,212,0.5)] flex items-center justify-center overflow-visible">
-            {/* Customer Support Avatar Character with Headset */}
-            <svg viewBox="0 0 100 100" className="w-full h-full rounded-full">
-              {/* Headset arc */}
-              <path d="M 24 50 A 26 26 0 0 1 76 50" fill="none" stroke="#06b6d4" strokeWidth="6" strokeLinecap="round" />
-              {/* Headset earpieces */}
-              <rect x="18" y="42" width="8" height="18" rx="4" fill="#0284c7" />
-              <rect x="74" y="42" width="8" height="18" rx="4" fill="#0284c7" />
-              {/* Face */}
-              <circle cx="50" cy="50" r="23" fill="#ffedd5" />
-              {/* Hair */}
-              <path d="M 27 50 C 27 34, 73 34, 73 50 Z" fill="#b45309" />
-              {/* Eyes */}
-              <circle cx="43" cy="48" r="3.2" fill="#0f172a" />
-              <circle cx="57" cy="48" r="3.2" fill="#0f172a" />
-              {/* Smile */}
-              <path d="M 43 57 Q 50 63, 57 57" fill="none" stroke="#ea580c" strokeWidth="2.5" strokeLinecap="round" />
-              {/* Shirt Collar */}
-              <path d="M 33 72 L 50 66 L 67 72 L 67 90 L 33 90 Z" fill="#2563eb" />
-              <polygon points="50,68 45,80 55,80" fill="#f59e0b" />
-              {/* Microphone boom */}
-              <path d="M 22 55 Q 35 70, 42 66" fill="none" stroke="#0284c7" strokeWidth="3" strokeLinecap="round" />
-              <circle cx="43" cy="65" r="3.5" fill="#ef4444" />
-            </svg>
+        <div className="fixed bottom-20 right-3.5 sm:bottom-6 sm:right-6 z-40 flex items-center justify-center">
+          {/* Close/Hide Button (X) to dismiss live chat until refresh */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              sound.playClick();
+              setIsDismissed(true);
+            }}
+            title="লাইভ চ্যাট বন্ধ করুন (রিফ্রেশ করলে আবার আসবে)"
+            className="absolute -top-2 -left-2 w-5 h-5 rounded-full bg-slate-900 hover:bg-rose-600 border border-slate-700 hover:border-rose-500 text-slate-300 hover:text-white flex items-center justify-center shadow-md transition z-50 cursor-pointer"
+          >
+            <X className="w-3 h-3 stroke-[2.5]" />
+          </button>
 
-            {/* Pulsating Green Online Indicator (Bottom-Right) */}
-            <span className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-[#070b14]" />
-            </span>
-          </div>
-        </button>
+          <button
+            onClick={() => {
+              sound.playClick();
+              setIsOpen(true);
+            }}
+            title="২৪/৭ লাইভ সাপোর্ট ও হেল্প"
+            className="group cursor-pointer transition-transform transform hover:scale-110 active:scale-95"
+          >
+            <div className="relative w-14 h-14 rounded-full bg-[#0b1c3d] p-1 border-2 border-cyan-400 shadow-[0_8px_20px_rgba(6,182,212,0.5)] flex items-center justify-center overflow-visible">
+              {/* Customer Support Avatar Character with Headset */}
+              <svg viewBox="0 0 100 100" className="w-full h-full rounded-full">
+                {/* Headset arc */}
+                <path d="M 24 50 A 26 26 0 0 1 76 50" fill="none" stroke="#06b6d4" strokeWidth="6" strokeLinecap="round" />
+                {/* Headset earpieces */}
+                <rect x="18" y="42" width="8" height="18" rx="4" fill="#0284c7" />
+                <rect x="74" y="42" width="8" height="18" rx="4" fill="#0284c7" />
+                {/* Face */}
+                <circle cx="50" cy="50" r="23" fill="#ffedd5" />
+                {/* Hair */}
+                <path d="M 27 50 C 27 34, 73 34, 73 50 Z" fill="#b45309" />
+                {/* Eyes */}
+                <circle cx="43" cy="48" r="3.2" fill="#0f172a" />
+                <circle cx="57" cy="48" r="3.2" fill="#0f172a" />
+                {/* Smile */}
+                <path d="M 43 57 Q 50 63, 57 57" fill="none" stroke="#ea580c" strokeWidth="2.5" strokeLinecap="round" />
+                {/* Shirt Collar */}
+                <path d="M 33 72 L 50 66 L 67 72 L 67 90 L 33 90 Z" fill="#2563eb" />
+                <polygon points="50,68 45,80 55,80" fill="#f59e0b" />
+                {/* Microphone boom */}
+                <path d="M 22 55 Q 35 70, 42 66" fill="none" stroke="#0284c7" strokeWidth="3" strokeLinecap="round" />
+                <circle cx="43" cy="65" r="3.5" fill="#ef4444" />
+              </svg>
+
+              {/* Pulsating Green Online Indicator (Bottom-Right) */}
+              <span className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-[#070b14]" />
+              </span>
+            </div>
+          </button>
+        </div>
       )}
 
       {/* 💬 Slide-in AI Support Chat Window */}

@@ -48,19 +48,6 @@ export default function Navbar({
 
       {/* Right Controls */}
       <div className="flex items-center gap-2 sm:gap-3">
-        {/* PWA Install Button */}
-        {onInstallPwa && (
-          <button
-            onClick={onInstallPwa}
-            title="লুডুস্টার প্রো অ্যাপ ইনস্টল করুন"
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/40 text-cyan-300 font-bold text-xs hover:bg-cyan-500/30 transition cursor-pointer"
-          >
-            <Download className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="hidden sm:inline">অ্যাপ ইনস্টল</span>
-            <span className="sm:hidden">ইনস্টল</span>
-          </button>
-        )}
-
         {currentUser ? (
           <>
             {/* Wallet Balance Badge with Direct Deposit / Withdraw */}

@@ -334,32 +334,41 @@ export default function HomeDashboard({
         </div>
       </div>
 
-      {/* 5. Join Friend's Room with Code Box */}
-      <div className="p-4 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-bold text-white flex items-center gap-1.5">
-            <Key className="w-3.5 h-3.5 text-amber-400" /> রুম কোড দিয়ে যুক্ত হোন
-          </span>
-          <span className="text-[10px] text-slate-500">প্রাইভেট রুম</span>
-        </div>
+      {/* 5. Join / Create Private Room Box (Only Visible When Logged In) */}
+      {currentUser && (
+        <div className="p-4 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-white flex items-center gap-1.5">
+              <Key className="w-3.5 h-3.5 text-amber-400" /> বন্ধুদের প্রাইভেট রুম
+            </span>
+            <span className="text-[10px] text-amber-400 font-medium">কোড বা তৈরি</span>
+          </div>
 
-        <form onSubmit={handleRoomCodeSubmit} className="flex items-center gap-2">
-          <input
-            type="text"
-            placeholder="৬ অক্ষরের কোড"
-            maxLength={6}
-            value={roomCode}
-            onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
-            className="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white font-mono uppercase tracking-widest focus:outline-none focus:border-amber-500"
-          />
+          <form onSubmit={handleRoomCodeSubmit} className="flex items-center gap-2">
+            <input
+              type="text"
+              placeholder="৬ অক্ষরের রুম কোড"
+              maxLength={6}
+              value={roomCode}
+              onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
+              className="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white font-mono uppercase tracking-widest focus:outline-none focus:border-amber-500"
+            />
+            <button
+              type="submit"
+              className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition cursor-pointer"
+            >
+              যুক্ত হোন
+            </button>
+          </form>
+
           <button
-            type="submit"
-            className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition cursor-pointer"
+            onClick={() => onSelectGame('ludo')}
+            className="w-full py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700/80 flex items-center justify-center gap-2 transition cursor-pointer"
           >
-            যুক্ত হোন
+            <Plus className="w-4 h-4 text-amber-400" /> নতুন প্রাইভেট রুম তৈরি করুন
           </button>
-        </form>
-      </div>
+        </div>
+      )}
 
       {/* 6. Online Friends Stories Carousel (if logged in) */}
       {currentUser && (
