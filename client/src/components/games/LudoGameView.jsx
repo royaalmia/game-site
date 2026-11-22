@@ -45,6 +45,71 @@ const BASE_SLOTS = {
   blue: [[11, 2], [11, 3], [12, 2], [12, 3]]
 };
 
+// Realistic 3D Map-Pin Style Pawn Token (Ludo King Edition)
+function LudoPinToken({ color, isClickable, label, onClick }) {
+  const colorMap = {
+    red: { fill: '#e52521', highlight: '#fca5a5', shadow: '#991b1b', eye: '#b91c1c' },
+    green: { fill: '#00a859', highlight: '#86efac', shadow: '#065f46', eye: '#047857' },
+    yellow: { fill: '#fdb813', highlight: '#fef08a', shadow: '#b45309', eye: '#d97706' },
+    blue: { fill: '#0080ff', highlight: '#93c5fd', shadow: '#1e40af', eye: '#1d4ed8' }
+  };
+  const c = colorMap[color] || colorMap.red;
+
+  return (
+    <button
+      onClick={onClick}
+      disabled={!isClickable}
+      className={`absolute inset-0 flex items-center justify-center transition-all duration-200 select-none ${
+        isClickable
+          ? 'cursor-pointer scale-125 z-30 animate-bounce drop-shadow-[0_0_10px_rgba(251,191,36,1)]'
+          : 'z-20 drop-shadow-[0_3px_5px_rgba(0,0,0,0.5)]'
+      }`}
+    >
+      <svg viewBox="0 0 40 50" className="w-[88%] h-[88%] max-w-[30px] max-h-[38px]">
+        <defs>
+          <linearGradient id={`silverGrad-${color}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="45%" stopColor="#e2e8f0" />
+            <stop offset="70%" stopColor="#cbd5e1" />
+            <stop offset="100%" stopColor="#94a3b8" />
+          </linearGradient>
+          <radialGradient id={`glossGrad-${color}`} cx="35%" cy="35%" r="65%">
+            <stop offset="0%" stopColor={c.highlight} />
+            <stop offset="55%" stopColor={c.fill} />
+            <stop offset="100%" stopColor={c.shadow} />
+          </radialGradient>
+        </defs>
+        
+        {/* Shadow */}
+        <ellipse cx="20" cy="46" rx="10" ry="3.5" fill="rgba(0,0,0,0.35)" />
+
+        {/* Outer Silver Contoured Frame (Pawn pin body) */}
+        <path
+          d="M 20 2 C 11 2, 4 9, 4 19 C 4 27, 13 36, 17 44 L 23 44 C 27 36, 36 27, 36 19 C 36 9, 29 2, 20 2 Z"
+          fill={`url(#silverGrad-${color})`}
+          stroke="#475569"
+          strokeWidth="1.2"
+        />
+
+        {/* Inner Colored Core */}
+        <path
+          d="M 20 5 C 13 5, 7 11, 7 19 C 7 25, 14 34, 18 42 L 22 42 C 26 34, 33 25, 33 19 C 33 11, 27 5, 20 5 Z"
+          fill={`url(#glossGrad-${color})`}
+        />
+
+        {/* Center Circular Eye with White Bevel */}
+        <circle cx="20" cy="18" r="7.5" fill={c.fill} stroke="#ffffff" strokeWidth="1.6" />
+        <circle cx="20" cy="18" r="5" fill={c.eye} />
+        <circle cx="18" cy="16" r="2" fill="#ffffff" opacity="0.85" />
+
+        {/* Bottom Pedestal Base */}
+        <ellipse cx="20" cy="45" rx="8" ry="2.5" fill="#475569" />
+        <ellipse cx="20" cy="44" rx="7" ry="2" fill={`url(#silverGrad-${color})`} />
+      </svg>
+    </button>
+  );
+}
+
 function RealisticDice({ value = 1, isRolling = false }) {
   const pipsMap = {
     1: [[1, 1]],
@@ -319,43 +384,68 @@ export default function LudoGameView({ match, gameState, currentUser, socket, on
           </div>
         </div>
 
-        {/* 15x15 Deluxe Realistic Ludo Board Grid */}
-        <div className="relative aspect-square w-full max-w-[500px] bg-gradient-to-br from-amber-950 via-stone-900 to-amber-950 p-2.5 sm:p-4 rounded-[2rem] border-[6px] border-amber-900/80 shadow-[0_25px_60px_rgba(0,0,0,0.85),inset_0_2px_4px_rgba(255,255,255,0.15)] overflow-hidden">
-          <div className="grid grid-cols-15 grid-rows-15 w-full h-full gap-0.5 bg-slate-950 rounded-2xl overflow-hidden relative shadow-inner">
+        {/* 15x15 Classic Realistic Ludo King Board */}
+        <div className="relative aspect-square w-full max-w-[500px] bg-white p-2 sm:p-3 rounded-3xl border-4 border-slate-800 shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden">
+          <div className="grid grid-cols-15 grid-rows-15 w-full h-full border border-slate-400 bg-white relative">
             {/* 15x15 Cells */}
             {Array.from({ length: 15 }).map((_, r) =>
               Array.from({ length: 15 }).map((_, c) => {
                 // Determine Cell Color/Style
-                let bgStyle = 'bg-slate-900/90';
+                let bgStyle = 'bg-white border-[0.5px] border-slate-300';
                 let isStar = false;
-                let isHomeTriangle = (r >= 6 && r <= 8 && c >= 6 && c <= 8);
+                let arrow = null;
+                const isHomeTriangle = (r >= 6 && r <= 8 && c >= 6 && c <= 8);
 
-                // Base Corners
-                if (r < 6 && c < 6) bgStyle = 'bg-gradient-to-br from-red-950 to-red-900/80 border border-red-800/40 shadow-inner';
-                else if (r < 6 && c > 8) bgStyle = 'bg-gradient-to-br from-emerald-950 to-emerald-900/80 border border-emerald-800/40 shadow-inner';
-                else if (r > 8 && c > 8) bgStyle = 'bg-gradient-to-br from-amber-950 to-yellow-900/80 border border-yellow-800/40 shadow-inner';
-                else if (r > 8 && c < 6) bgStyle = 'bg-gradient-to-br from-blue-950 to-blue-900/80 border border-blue-800/40 shadow-inner';
-
-                // Home Paths
-                if (r === 7 && c >= 1 && c <= 5) bgStyle = 'bg-red-600/90 shadow-inner';
-                if (c === 7 && r >= 1 && r <= 5) bgStyle = 'bg-emerald-600/90 shadow-inner';
-                if (r === 7 && c >= 9 && c <= 13) bgStyle = 'bg-yellow-500/90 shadow-inner';
-                if (c === 7 && r >= 9 && r <= 13) bgStyle = 'bg-blue-600/90 shadow-inner';
-
-                // Starting Safe Squares
-                if (r === 6 && c === 1) { bgStyle = 'bg-red-600'; isStar = true; }
-                if (r === 1 && c === 8) { bgStyle = 'bg-emerald-600'; isStar = true; }
-                if (r === 8 && c === 13) { bgStyle = 'bg-yellow-500'; isStar = true; }
-                if (r === 13 && c === 6) { bgStyle = 'bg-blue-600'; isStar = true; }
-
-                // Star Safe Squares
-                if ((r === 2 && c === 6) || (r === 6 && c === 12) || (r === 12 && c === 8) || (r === 8 && c === 2)) {
-                  isStar = true;
-                  bgStyle = 'bg-slate-800/90';
+                // Base Corners (Red, Green, Yellow, Blue)
+                if (r < 6 && c < 6) {
+                  bgStyle = 'bg-[#e52521] border-none';
+                  // White inner slot for tokens inside base
+                  if (r >= 1 && r <= 4 && c >= 1 && c <= 4) {
+                    bgStyle = 'bg-white border border-slate-200';
+                  }
+                } else if (r < 6 && c > 8) {
+                  bgStyle = 'bg-[#00a859] border-none';
+                  if (r >= 1 && r <= 4 && c >= 10 && c <= 13) {
+                    bgStyle = 'bg-white border border-slate-200';
+                  }
+                } else if (r > 8 && c > 8) {
+                  bgStyle = 'bg-[#fdb813] border-none';
+                  if (r >= 10 && r <= 13 && c >= 10 && c <= 13) {
+                    bgStyle = 'bg-white border border-slate-200';
+                  }
+                } else if (r > 8 && c < 6) {
+                  bgStyle = 'bg-[#0080ff] border-none';
+                  if (r >= 10 && r <= 13 && c >= 1 && c <= 4) {
+                    bgStyle = 'bg-white border border-slate-200';
+                  }
                 }
 
+                // Colored Home Run Columns
+                if (r === 7 && c >= 1 && c <= 5) bgStyle = 'bg-[#e52521] border-[0.5px] border-red-700';
+                if (c === 7 && r >= 1 && r <= 5) bgStyle = 'bg-[#00a859] border-[0.5px] border-green-700';
+                if (r === 7 && c >= 9 && c <= 13) bgStyle = 'bg-[#fdb813] border-[0.5px] border-amber-600';
+                if (c === 7 && r >= 9 && r <= 13) bgStyle = 'bg-[#0080ff] border-[0.5px] border-blue-700';
+
+                // Starting Safe Squares (with star)
+                if (r === 6 && c === 1) { bgStyle = 'bg-[#e52521] border-[0.5px] border-red-700'; isStar = true; }
+                if (r === 1 && c === 8) { bgStyle = 'bg-[#00a859] border-[0.5px] border-green-700'; isStar = true; }
+                if (r === 8 && c === 13) { bgStyle = 'bg-[#fdb813] border-[0.5px] border-amber-600'; isStar = true; }
+                if (r === 13 && c === 6) { bgStyle = 'bg-[#0080ff] border-[0.5px] border-blue-700'; isStar = true; }
+
+                // Safe Star Squares on common track
+                if ((r === 2 && c === 6) || (r === 6 && c === 12) || (r === 12 && c === 8) || (r === 8 && c === 2)) {
+                  isStar = true;
+                }
+
+                // Entry Arrows
+                if (r === 7 && c === 0) arrow = '➔';
+                if (r === 0 && c === 7) arrow = '⬇';
+                if (r === 7 && c === 14) arrow = '⬅';
+                if (r === 14 && c === 7) arrow = '⬆';
+
+                // Center Home Triangles
                 if (isHomeTriangle) {
-                  bgStyle = 'bg-gradient-to-br from-red-600 via-emerald-600 via-yellow-500 to-blue-600';
+                  bgStyle = 'bg-white border-none';
                 }
 
                 const tokensHere = getTokensInCell(r, c);
@@ -363,36 +453,56 @@ export default function LudoGameView({ match, gameState, currentUser, socket, on
                 return (
                   <div
                     key={`${r}-${c}`}
-                    className={`relative flex items-center justify-center select-none text-[8px] transition ${bgStyle}`}
+                    className={`relative flex items-center justify-center select-none text-[8px] ${bgStyle}`}
                   >
+                    {/* Outline Safe Star */}
                     {isStar && !isHomeTriangle && (
-                      <span className="text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.9)] text-[11px] font-black">★</span>
+                      <span className={`text-base sm:text-lg font-black select-none ${
+                        (r === 6 && c === 1) || (r === 1 && c === 8) || (r === 8 && c === 13) || (r === 13 && c === 6)
+                          ? 'text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]'
+                          : 'text-slate-400'
+                      }`}>
+                        ☆
+                      </span>
                     )}
 
-                    {isHomeTriangle && r === 7 && c === 7 && (
-                      <Trophy className="w-5 h-5 text-amber-300 drop-shadow-md animate-bounce" />
+                    {/* Entry Arrows */}
+                    {arrow && (
+                      <span className="text-xs sm:text-sm font-black text-slate-700 select-none">
+                        {arrow}
+                      </span>
                     )}
 
-                    {/* Tokens rendering */}
+                    {/* Center Interlocking Triangles */}
+                    {r === 7 && c === 7 && (
+                      <div className="absolute inset-[-100%] w-[300%] h-[300%] pointer-events-none z-0">
+                        <svg viewBox="0 0 100 100" className="w-full h-full">
+                          {/* Red Left Triangle */}
+                          <polygon points="0,0 50,50 0,100" fill="#e52521" />
+                          {/* Green Top Triangle */}
+                          <polygon points="0,0 50,50 100,0" fill="#00a859" />
+                          {/* Yellow Right Triangle */}
+                          <polygon points="100,0 50,50 100,100" fill="#fdb813" />
+                          {/* Blue Bottom Triangle */}
+                          <polygon points="0,100 50,50 100,100" fill="#0080ff" />
+                          {/* Center Trophy / Star */}
+                          <circle cx="50" cy="50" r="8" fill="#ffffff" />
+                          <circle cx="50" cy="50" r="6" fill="#f59e0b" />
+                        </svg>
+                      </div>
+                    )}
+
+                    {/* Realistic 3D Map-Pin Tokens */}
                     {tokensHere.map(({ player, token }) => {
                       const isClickable = isMyTurn && validMoves.includes(token.id) && player.userId === currentUser?.id;
                       return (
-                        <button
+                        <LudoPinToken
                           key={`${player.userId}-${token.id}`}
+                          color={player.color}
+                          isClickable={isClickable}
+                          label={token.id + 1}
                           onClick={() => handleTokenClick(token.id)}
-                          disabled={!isClickable}
-                          title={`${player.username}'s Token #${token.id + 1}`}
-                          className={`absolute w-[86%] h-[86%] rounded-full flex items-center justify-center font-black text-[9px] shadow-[0_4px_8px_rgba(0,0,0,0.7),inset_0_2px_3px_rgba(255,255,255,0.45)] transition-all duration-200 z-10 ${
-                            player.color === 'red' ? 'bg-gradient-to-b from-red-400 via-red-500 to-red-700 text-white ring-1 ring-red-200' :
-                            player.color === 'yellow' ? 'bg-gradient-to-b from-yellow-300 via-amber-400 to-amber-600 text-slate-950 ring-1 ring-yellow-100' :
-                            player.color === 'green' ? 'bg-gradient-to-b from-emerald-400 via-emerald-500 to-emerald-700 text-white ring-1 ring-emerald-200' :
-                            'bg-gradient-to-b from-blue-400 via-blue-500 to-blue-700 text-white ring-1 ring-blue-200'
-                          } ${
-                            isClickable ? 'ring-4 ring-amber-400 animate-pulse-glow cursor-pointer scale-125 z-20 hover:scale-135' : ''
-                          }`}
-                        >
-                          {token.id + 1}
-                        </button>
+                        />
                       );
                     })}
                   </div>

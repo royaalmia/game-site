@@ -80,184 +80,328 @@ export default function CarromGameView({ match, gameState, currentUser, socket, 
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 max-w-5xl mx-auto p-2 sm:p-4 items-center lg:items-start justify-center">
+    <div className="min-h-[85vh] w-full flex flex-col items-center justify-start p-2 sm:p-4 bg-[#20050d] bg-[radial-gradient(ellipse_at_top,_#47091a_0%,_#1a030a_100%)] text-slate-100 rounded-3xl shadow-2xl">
       {/* Board Column */}
-      <div className="flex flex-col items-center w-full max-w-[500px]">
-        {/* Header */}
-        <div className="flex items-center justify-between w-full mb-3 px-2">
+      <div className="flex flex-col items-center w-full max-w-[490px]">
+        {/* Top Control Bar */}
+        <div className="flex items-center justify-between w-full mb-2 px-1">
           <button 
             onClick={onLeave}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 text-xs font-medium hover:bg-slate-700"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/80 border border-amber-900/50 text-slate-300 text-xs font-bold hover:bg-slate-800 transition"
           >
-            <ArrowLeft className="w-4 h-4" /> Exit
+            <ArrowLeft className="w-4 h-4" /> প্রস্থান
           </button>
-          <div className="flex items-center gap-2">
-            <span className="bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full text-amber-400 text-xs font-semibold">
-              Pool: {match.stake * 2} ৳
-            </span>
-            <span className="bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full text-emerald-400 text-xs font-semibold">
-              Win: {(match.stake * 2 * 0.95).toFixed(0)} ৳
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5 font-mono text-xs px-2.5 py-1 rounded-xl bg-slate-800 text-amber-400 border border-slate-700 font-bold">
+          <div className="flex items-center gap-1.5 font-mono text-xs px-3 py-1 rounded-xl bg-slate-900/90 text-amber-400 border border-amber-800/40 font-bold shadow-md">
             <Clock className="w-3.5 h-3.5" /> {timeLeft}s
           </div>
         </div>
 
-        {/* Players Score Bar */}
-        <div className="w-full bg-slate-900 border border-slate-800 rounded-2xl p-3 mb-3 flex items-center justify-between">
-          {players.map((p, idx) => (
-            <div key={idx} className={`flex items-center gap-2.5 ${p.userId === currentTurnUserId ? 'opacity-100 font-bold' : 'opacity-60'}`}>
-              <div className={`w-3.5 h-3.5 rounded-full border ${p.side === 'white' ? 'bg-amber-100 border-white' : 'bg-slate-900 border-slate-600'}`} />
-              <div className="text-xs">
-                <span className="text-white block">{p.username} ({p.side})</span>
-                <span className="text-amber-400 font-bold">{p.score || 0} pts</span>
+        {/* 🏆 Carrom Pool Top Pot & Player Header (Ref: Carrom Pool App) */}
+        <div className="w-full bg-slate-950/60 border border-amber-900/40 rounded-3xl p-3 mb-3 flex items-center justify-between backdrop-blur-sm shadow-xl">
+          {/* Player 1 (White) */}
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-600 to-yellow-400 p-0.5 shadow-lg">
+                <img
+                  src={players[0]?.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=CarromPro1'}
+                  alt="p1"
+                  className="w-full h-full rounded-2xl bg-slate-900 object-cover"
+                />
+              </div>
+              <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-white border border-slate-400 shadow-sm flex items-center justify-center text-[9px]">⚪</span>
+            </div>
+            <div className="text-left">
+              <span className="text-xs font-black text-white block max-w-[85px] truncate">
+                {players[0]?.username || 'Player 1'}
+              </span>
+              <div className="flex items-center gap-1">
+                <span className="w-3 h-3 rounded-full bg-white shadow-sm inline-block" />
+                <span className="font-mono text-sm font-black text-white">
+                  {players[0]?.score || 0}
+                </span>
               </div>
             </div>
-          ))}
+          </div>
+
+          {/* Center Stake / Pot Badge with Stack of Gold Coins */}
+          <div className="flex flex-col items-center">
+            <div className="text-2xl drop-shadow-[0_4px_8px_rgba(245,158,11,0.6)]">
+              🪙🪙
+            </div>
+            <span className="text-lg sm:text-xl font-black text-amber-300 font-mono tracking-tight drop-shadow-md">
+              {match.stake * 2} ৳
+            </span>
+            <span className="text-[10px] text-amber-400/80 font-bold uppercase tracking-wider">
+              বোর্ড প্রাইজ
+            </span>
+          </div>
+
+          {/* Player 2 (Black) */}
+          <div className="flex items-center gap-2 flex-row-reverse text-right">
+            <div className="relative">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-slate-700 to-slate-500 p-0.5 shadow-lg">
+                <img
+                  src={players[1]?.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=CarromKing2'}
+                  alt="p2"
+                  className="w-full h-full rounded-2xl bg-slate-900 object-cover"
+                />
+              </div>
+              <span className="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-slate-900 border border-slate-600 shadow-sm flex items-center justify-center text-[9px]">⚫</span>
+            </div>
+            <div>
+              <span className="text-xs font-black text-white block max-w-[85px] truncate">
+                {players[1]?.username || 'Player 2'}
+              </span>
+              <div className="flex items-center justify-end gap-1">
+                <span className="w-3 h-3 rounded-full bg-slate-900 border border-slate-600 shadow-sm inline-block" />
+                <span className="font-mono text-sm font-black text-slate-300">
+                  {players[1]?.score || 0}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Deluxe Realistic Carrom Board */}
-        <div className="relative aspect-square w-full max-w-[480px] bg-gradient-to-br from-amber-950 via-stone-900 to-amber-950 rounded-[2.5rem] border-[8px] border-amber-900/90 shadow-[0_25px_60px_rgba(0,0,0,0.85),inset_0_2px_4px_rgba(255,255,255,0.15)] p-3 sm:p-4 overflow-hidden">
-          <svg viewBox="0 0 600 600" className="w-full h-full rounded-2xl shadow-inner">
-            {/* Board Background */}
-            <rect width="600" height="600" fill="#f8e7b9" />
-            
-            {/* Outer border & Baseline frame */}
-            <rect x="25" y="25" width="550" height="550" fill="none" stroke="#78350f" strokeWidth="5" />
-            
-            {/* 4 Corner Pockets with Brass Trim */}
-            <circle cx="45" cy="45" r="30" fill="#020617" stroke="#b45309" strokeWidth="4" />
-            <circle cx="555" cy="45" r="30" fill="#020617" stroke="#b45309" strokeWidth="4" />
-            <circle cx="45" cy="555" r="30" fill="#020617" stroke="#b45309" strokeWidth="4" />
-            <circle cx="555" cy="555" r="30" fill="#020617" stroke="#b45309" strokeWidth="4" />
+        {/* 🎯 The Deluxe Carrom Board Frame */}
+        <div className="relative aspect-square w-full max-w-[460px] bg-[#d97706] rounded-[2.5rem] border-[10px] border-[#b45309] shadow-[0_30px_70px_rgba(0,0,0,0.9),inset_0_4px_6px_rgba(255,255,255,0.3)] p-2.5 sm:p-3 overflow-hidden">
+          {/* Inner Blue Cushion Rim */}
+          <div className="w-full h-full rounded-[1.8rem] border-[6px] border-[#0284c7] overflow-hidden shadow-inner relative bg-[#f5e1b8]">
+            <svg viewBox="0 0 600 600" className="w-full h-full select-none">
+              <defs>
+                {/* Natural Wood Board Gradient */}
+                <radialGradient id="carromWood" cx="50%" cy="50%" r="70%">
+                  <stop offset="0%" stopColor="#faecd1" />
+                  <stop offset="60%" stopColor="#f5dcab" />
+                  <stop offset="100%" stopColor="#e8c78c" />
+                </radialGradient>
+                {/* Deep Pocket Radial Shadow */}
+                <radialGradient id="pocketDepth" cx="40%" cy="40%" r="60%">
+                  <stop offset="0%" stopColor="#1e293b" />
+                  <stop offset="70%" stopColor="#090d16" />
+                  <stop offset="100%" stopColor="#000000" />
+                </radialGradient>
+              </defs>
 
-            {/* Center Circle */}
-            <circle cx="300" cy="300" r="70" fill="none" stroke="#b45309" strokeWidth="3" />
-            <circle cx="300" cy="300" r="20" fill="#b45309" opacity="0.3" />
+              {/* Surface */}
+              <rect width="600" height="600" fill="url(#carromWood)" />
+              
+              {/* Outer baseline boundary square */}
+              <rect x="55" y="55" width="490" height="490" fill="none" stroke="#78350f" strokeWidth="2" opacity="0.6" />
 
-            {/* Baselines */}
-            <line x1="150" y1="520" x2="450" y2="520" stroke="#b45309" strokeWidth="3" strokeDasharray="6 4" />
-            <circle cx="150" cy="520" r="14" fill="#f59e0b" stroke="#78350f" strokeWidth="2" />
-            <circle cx="450" cy="520" r="14" fill="#f59e0b" stroke="#78350f" strokeWidth="2" />
+              {/* 4 Corner Pockets */}
+              <circle cx="42" cy="42" r="32" fill="url(#pocketDepth)" stroke="#78350f" strokeWidth="3" />
+              <circle cx="558" cy="42" r="32" fill="url(#pocketDepth)" stroke="#78350f" strokeWidth="3" />
+              <circle cx="42" cy="558" r="32" fill="url(#pocketDepth)" stroke="#78350f" strokeWidth="3" />
+              <circle cx="558" cy="558" r="32" fill="url(#pocketDepth)" stroke="#78350f" strokeWidth="3" />
 
-            <line x1="150" y1="80" x2="450" y2="80" stroke="#b45309" strokeWidth="3" strokeDasharray="6 4" />
-            <circle cx="150" cy="80" r="14" fill="#f59e0b" stroke="#78350f" strokeWidth="2" />
-            <circle cx="450" cy="80" r="14" fill="#f59e0b" stroke="#78350f" strokeWidth="2" />
+              {/* Pocket Corner Diagonal Arrows */}
+              <line x1="85" y1="85" x2="160" y2="160" stroke="#9a3412" strokeWidth="2" />
+              <circle cx="160" cy="160" r="16" fill="none" stroke="#9a3412" strokeWidth="2" />
+              <line x1="515" y1="85" x2="440" y2="160" stroke="#9a3412" strokeWidth="2" />
+              <circle cx="440" cy="160" r="16" fill="none" stroke="#9a3412" strokeWidth="2" />
+              <line x1="85" y1="515" x2="160" y2="440" stroke="#9a3412" strokeWidth="2" />
+              <circle cx="160" cy="440" r="16" fill="none" stroke="#9a3412" strokeWidth="2" />
+              <line x1="515" y1="515" x2="440" y2="440" stroke="#9a3412" strokeWidth="2" />
+              <circle cx="440" cy="440" r="16" fill="none" stroke="#9a3412" strokeWidth="2" />
 
-            {/* Coins on Board */}
-            {coins.filter(c => !c.pocketed).map(coin => (
-              <circle
-                key={coin.id}
-                cx={coin.x}
-                cy={coin.y}
-                r={coin.radius}
-                fill={coin.type === 'queen' ? '#dc2626' : coin.type === 'white' ? '#f8fafc' : '#1e293b'}
-                stroke={coin.type === 'queen' ? '#991b1b' : coin.type === 'white' ? '#cbd5e1' : '#0f172a'}
-                strokeWidth="2"
-                filter="drop-shadow(0 2px 3px rgba(0,0,0,0.4))"
-              />
-            ))}
+              {/* Baselines (Player & Opponent) */}
+              {/* Bottom Baseline */}
+              <line x1="150" y1="480" x2="450" y2="480" stroke="#78350f" strokeWidth="2.5" />
+              <line x1="150" y1="486" x2="450" y2="486" stroke="#78350f" strokeWidth="1" strokeDasharray="5 3" />
+              <circle cx="150" cy="483" r="16" fill="#c2410c" stroke="#78350f" strokeWidth="2" />
+              <circle cx="450" cy="483" r="16" fill="#c2410c" stroke="#78350f" strokeWidth="2" />
 
-            {/* Active Striker */}
-            <circle
-              cx={strikerX}
-              cy={myPlayer?.side === 'white' ? 520 : 80}
-              r="18"
-              fill="#06b6d4"
-              stroke="#0891b2"
-              strokeWidth="3"
-              filter="drop-shadow(0 3px 5px rgba(0,0,0,0.5))"
+              {/* Top Baseline */}
+              <line x1="150" y1="120" x2="450" y2="120" stroke="#78350f" strokeWidth="2.5" />
+              <line x1="150" y1="114" x2="450" y2="114" stroke="#78350f" strokeWidth="1" strokeDasharray="5 3" />
+              <circle cx="150" cy="117" r="16" fill="#c2410c" stroke="#78350f" strokeWidth="2" />
+              <circle cx="450" cy="117" r="16" fill="#c2410c" stroke="#78350f" strokeWidth="2" />
+
+              {/* Center Concentric Circles with Rosette Design */}
+              <circle cx="300" cy="300" r="75" fill="none" stroke="#78350f" strokeWidth="2.5" />
+              <circle cx="300" cy="300" r="25" fill="#fef08a" stroke="#b45309" strokeWidth="2" opacity="0.4" />
+              <circle cx="300" cy="300" r="6" fill="#b45309" />
+
+              {/* Carrom Men (Pucks) on Board */}
+              {coins.filter(c => !c.pocketed).map(coin => (
+                <g key={coin.id}>
+                  <circle
+                    cx={coin.x}
+                    cy={coin.y}
+                    r={coin.radius}
+                    fill={
+                      coin.type === 'queen' ? '#dc2626' :
+                      coin.type === 'white' ? '#f8fafc' : '#1e293b'
+                    }
+                    stroke={
+                      coin.type === 'queen' ? '#991b1b' :
+                      coin.type === 'white' ? '#cbd5e1' : '#0f172a'
+                    }
+                    strokeWidth="2.5"
+                    filter="drop-shadow(0 3px 4px rgba(0,0,0,0.45))"
+                  />
+                  {coin.type === 'queen' && (
+                    <circle cx={coin.x} cy={coin.y} r={coin.radius * 0.45} fill="#fef08a" />
+                  )}
+                  {coin.type !== 'queen' && (
+                    <circle
+                      cx={coin.x}
+                      cy={coin.y}
+                      r={coin.radius * 0.4}
+                      fill="none"
+                      stroke={coin.type === 'white' ? '#e2e8f0' : '#334155'}
+                      strokeWidth="1.5"
+                    />
+                  )}
+                </g>
+              ))}
+
+              {/* Striker Guide Line */}
+              {isMyTurn && (
+                <line
+                  x1={strikerX}
+                  y1={myPlayer?.side === 'white' ? 483 : 117}
+                  x2={strikerX + Math.cos((angle * Math.PI) / 180) * (power * 2)}
+                  y2={(myPlayer?.side === 'white' ? 483 : 117) + (myPlayer?.side === 'white' ? -Math.sin((angle * Math.PI) / 180) : Math.sin((angle * Math.PI) / 180)) * (power * 2)}
+                  stroke="#10b981"
+                  strokeWidth="3.5"
+                  strokeDasharray="6 4"
+                  filter="drop-shadow(0 0 6px rgba(16,185,129,0.8))"
+                />
+              )}
+
+              {/* Active Striker (Emerald Glowing Striker from reference) */}
+              <g>
+                <circle
+                  cx={strikerX}
+                  cy={myPlayer?.side === 'white' ? 483 : 117}
+                  r="21"
+                  fill="#10b981"
+                  stroke="#ffffff"
+                  strokeWidth="3"
+                  filter="drop-shadow(0 4px 8px rgba(0,0,0,0.6))"
+                />
+                <circle
+                  cx={strikerX}
+                  cy={myPlayer?.side === 'white' ? 483 : 117}
+                  r="13"
+                  fill="#047857"
+                  stroke="#34d399"
+                  strokeWidth="1.5"
+                />
+                {/* Crosshair / Direction Pointer */}
+                <line
+                  x1={strikerX - 7}
+                  y1={myPlayer?.side === 'white' ? 483 : 117}
+                  x2={strikerX + 7}
+                  y2={myPlayer?.side === 'white' ? 483 : 117}
+                  stroke="#ffffff"
+                  strokeWidth="2"
+                />
+                <line
+                  x1={strikerX}
+                  y1={(myPlayer?.side === 'white' ? 483 : 117) - 7}
+                  x2={strikerX}
+                  y2={(myPlayer?.side === 'white' ? 483 : 117) + 7}
+                  stroke="#ffffff"
+                  strokeWidth="2"
+                />
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        {/* 🎚️ Mobile Striker Baseline Slider (Exact Match to Reference Image) */}
+        <div className="w-full max-w-[440px] mt-4 px-2">
+          <div className="relative flex items-center justify-center py-2">
+            {/* The Gradient Slider Capsule Bar */}
+            <div className="w-full h-8 rounded-full bg-gradient-to-r from-emerald-500 via-yellow-400 to-amber-600 p-0.5 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),0_4px_10px_rgba(0,0,0,0.5)] border-2 border-slate-700 relative overflow-hidden">
+              <div className="w-full h-full flex items-center justify-between px-6 opacity-30 pointer-events-none">
+                <span className="w-0.5 h-3 bg-slate-900" />
+                <span className="w-0.5 h-3 bg-slate-900" />
+                <span className="w-0.5 h-3 bg-slate-900" />
+                <span className="w-0.5 h-3 bg-slate-900" />
+                <span className="w-0.5 h-3 bg-slate-900" />
+              </div>
+            </div>
+
+            {/* Draggable Striker Slider Input */}
+            <input
+              type="range"
+              min="160"
+              max="440"
+              value={strikerX}
+              disabled={!isMyTurn}
+              onChange={(e) => setStrikerX(Number(e.target.value))}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
             />
 
-            {/* Aim Trajectory Arrow */}
-            {isMyTurn && (
-              <line
-                x1={strikerX}
-                y1={myPlayer?.side === 'white' ? 520 : 80}
-                x2={strikerX + Math.cos((angle * Math.PI) / 180) * (power * 1.5)}
-                y2={(myPlayer?.side === 'white' ? 520 : 80) + (myPlayer?.side === 'white' ? -Math.sin((angle * Math.PI) / 180) : Math.sin((angle * Math.PI) / 180)) * (power * 1.5)}
-                stroke="#0284c7"
-                strokeWidth="4"
-                strokeDasharray="4 4"
-              />
-            )}
-          </svg>
+            {/* Custom Circular Thumb with `< >` directional arrows (From User Image) */}
+            <div 
+              className="absolute top-1/2 -translate-y-1/2 pointer-events-none transition-all duration-75 z-10 flex items-center justify-center w-11 h-11 rounded-full bg-white border-4 border-amber-500 shadow-[0_4px_10px_rgba(0,0,0,0.6)] text-emerald-600 font-black text-sm"
+              style={{ left: `calc(${((strikerX - 160) / (440 - 160)) * 100}% - 22px)` }}
+            >
+              &lt; &gt;
+            </div>
+          </div>
         </div>
 
-        {/* Striker Controls */}
-        <div className="w-full bg-slate-900 border border-slate-800 rounded-2xl p-4 mt-3 shadow-xl">
-          <div className="space-y-3">
+        {/* Strike Aim, Power & Button Controls */}
+        <div className="w-full max-w-[440px] bg-slate-950/80 border border-slate-800 rounded-2xl p-3.5 mt-2 shadow-xl space-y-2.5">
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <div className="flex justify-between text-xs text-slate-400 mb-1">
-                <span>Striker Position</span>
-                <span className="font-mono text-cyan-400">{strikerX}</span>
+              <div className="flex justify-between text-[11px] text-slate-400 mb-0.5 font-bold">
+                <span>লক্ষ্য এঙ্গেল</span>
+                <span className="text-amber-400 font-mono">{angle}°</span>
               </div>
               <input
                 type="range"
-                min="150"
-                max="450"
-                value={strikerX}
+                min="20"
+                max="160"
+                value={angle}
                 disabled={!isMyTurn}
-                onChange={(e) => setStrikerX(Number(e.target.value))}
-                className="w-full accent-cyan-500 cursor-pointer"
+                onChange={(e) => setAngle(Number(e.target.value))}
+                className="w-full accent-amber-500 cursor-pointer"
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <div className="flex justify-between text-xs text-slate-400 mb-1">
-                  <span>Aim Angle</span>
-                  <span className="font-mono text-amber-400">{angle}°</span>
-                </div>
-                <input
-                  type="range"
-                  min="20"
-                  max="160"
-                  value={angle}
-                  disabled={!isMyTurn}
-                  onChange={(e) => setAngle(Number(e.target.value))}
-                  className="w-full accent-amber-500 cursor-pointer"
-                />
+            <div>
+              <div className="flex justify-between text-[11px] text-slate-400 mb-0.5 font-bold">
+                <span>স্ট্রাইক পাওয়ার</span>
+                <span className="text-emerald-400 font-mono">{power}%</span>
               </div>
-
-              <div>
-                <div className="flex justify-between text-xs text-slate-400 mb-1">
-                  <span>Strike Power</span>
-                  <span className="font-mono text-rose-400">{power}%</span>
-                </div>
-                <input
-                  type="range"
-                  min="20"
-                  max="100"
-                  value={power}
-                  disabled={!isMyTurn}
-                  onChange={(e) => setPower(Number(e.target.value))}
-                  className="w-full accent-rose-500 cursor-pointer"
-                />
-              </div>
+              <input
+                type="range"
+                min="25"
+                max="100"
+                value={power}
+                disabled={!isMyTurn}
+                onChange={(e) => setPower(Number(e.target.value))}
+                className="w-full accent-emerald-500 cursor-pointer"
+              />
             </div>
-
-            <button
-              onClick={handleStrike}
-              disabled={!isMyTurn}
-              className={`w-full py-3 rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-lg transition ${
-                isMyTurn
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 glow-cyan cursor-pointer scale-[1.02]'
-                  : 'bg-slate-800 text-slate-500 cursor-not-allowed'
-              }`}
-            >
-              <Zap className="w-4 h-4" /> {isMyTurn ? 'STRIKE!' : 'WAITING FOR OPPONENT'}
-            </button>
           </div>
+
+          <button
+            onClick={handleStrike}
+            disabled={!isMyTurn}
+            className={`w-full py-3.5 rounded-2xl font-black text-sm flex items-center justify-center gap-2 shadow-xl transition cursor-pointer ${
+              isMyTurn
+                ? 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-slate-950 glow-emerald scale-[1.02]'
+                : 'bg-slate-800 text-slate-500 cursor-not-allowed opacity-60'
+            }`}
+          >
+            <Zap className="w-4 h-4" /> {isMyTurn ? 'স্ট্রাইক করুন! ➔' : 'প্রতিপক্ষের চালের জন্য অপেক্ষা করুন...'}
+          </button>
         </div>
       </div>
 
       {/* Right Column: Chat & Commentary */}
-      <div className="w-full lg:w-80 flex flex-col gap-3">
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl flex flex-col h-80 shadow-lg overflow-hidden">
-          <div className="px-4 py-2.5 border-b border-slate-800 bg-slate-950/40">
-            <span className="text-xs font-bold text-slate-300">Carrom Commentary</span>
+      <div className="w-full max-w-[440px] lg:w-72 mt-3 lg:mt-0">
+        <div className="bg-slate-950/80 border border-slate-800 rounded-2xl flex flex-col h-64 shadow-lg overflow-hidden">
+          <div className="px-3 py-2 border-b border-slate-800 bg-slate-900/60 flex items-center justify-between text-xs font-bold text-slate-300">
+            <span className="flex items-center gap-1.5"><Sparkles className="w-3.5 h-3.5 text-amber-400" /> লাইভ চ্যাট</span>
+            <span className="text-[10px] text-emerald-400 font-mono">LIVE</span>
           </div>
 
           <div className="flex-1 p-3 overflow-y-auto space-y-2 text-xs">

@@ -29,6 +29,64 @@ const BASE_SLOTS = {
   yellow: [[11, 11], [11, 12], [12, 11], [12, 12]]
 };
 
+// Realistic 3D Map-Pin Style Pawn Token (Ludo King Edition)
+function LudoPinToken({ color, isClickable, onClick }) {
+  const colorMap = {
+    red: { fill: '#e52521', highlight: '#fca5a5', shadow: '#991b1b', eye: '#b91c1c' },
+    yellow: { fill: '#fdb813', highlight: '#fef08a', shadow: '#b45309', eye: '#d97706' }
+  };
+  const c = colorMap[color] || colorMap.red;
+
+  return (
+    <button
+      onClick={onClick}
+      disabled={!isClickable}
+      className={`absolute inset-0 flex items-center justify-center transition-all duration-200 select-none ${
+        isClickable
+          ? 'cursor-pointer scale-125 z-30 animate-bounce drop-shadow-[0_0_10px_rgba(251,191,36,1)]'
+          : 'z-20 drop-shadow-[0_3px_5px_rgba(0,0,0,0.5)]'
+      }`}
+    >
+      <svg viewBox="0 0 40 50" className="w-[88%] h-[88%] max-w-[28px] max-h-[36px]">
+        <defs>
+          <linearGradient id={`silverGradPrac-${color}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="45%" stopColor="#e2e8f0" />
+            <stop offset="70%" stopColor="#cbd5e1" />
+            <stop offset="100%" stopColor="#94a3b8" />
+          </linearGradient>
+          <radialGradient id={`glossGradPrac-${color}`} cx="35%" cy="35%" r="65%">
+            <stop offset="0%" stopColor={c.highlight} />
+            <stop offset="55%" stopColor={c.fill} />
+            <stop offset="100%" stopColor={c.shadow} />
+          </radialGradient>
+        </defs>
+        
+        <ellipse cx="20" cy="46" rx="10" ry="3.5" fill="rgba(0,0,0,0.35)" />
+
+        <path
+          d="M 20 2 C 11 2, 4 9, 4 19 C 4 27, 13 36, 17 44 L 23 44 C 27 36, 36 27, 36 19 C 36 9, 29 2, 20 2 Z"
+          fill={`url(#silverGradPrac-${color})`}
+          stroke="#475569"
+          strokeWidth="1.2"
+        />
+
+        <path
+          d="M 20 5 C 13 5, 7 11, 7 19 C 7 25, 14 34, 18 42 L 22 42 C 26 34, 33 25, 33 19 C 33 11, 27 5, 20 5 Z"
+          fill={`url(#glossGradPrac-${color})`}
+        />
+
+        <circle cx="20" cy="18" r="7.5" fill={c.fill} stroke="#ffffff" strokeWidth="1.6" />
+        <circle cx="20" cy="18" r="5" fill={c.eye} />
+        <circle cx="18" cy="16" r="2" fill="#ffffff" opacity="0.85" />
+
+        <ellipse cx="20" cy="45" rx="8" ry="2.5" fill="#475569" />
+        <ellipse cx="20" cy="44" rx="7" ry="2" fill={`url(#silverGradPrac-${color})`} />
+      </svg>
+    </button>
+  );
+}
+
 function RealisticDice({ value = 1, isRolling = false }) {
   const pipsMap = {
     1: [[1, 1]],
@@ -267,24 +325,55 @@ export default function PracticeModeView({ currentUser, onLeave }) {
         </span>
       </div>
 
-      {/* Deluxe 15x15 Realistic Board */}
-      <div className="aspect-square w-full max-w-[480px] mx-auto bg-gradient-to-br from-amber-950 via-stone-900 to-amber-950 p-2.5 sm:p-3.5 rounded-[2rem] border-[6px] border-amber-900/80 shadow-[0_20px_50px_rgba(0,0,0,0.8),inset_0_2px_4px_rgba(255,255,255,0.15)] relative">
-        <div className="grid grid-cols-15 grid-rows-15 w-full h-full gap-0.5 bg-slate-950 rounded-2xl overflow-hidden relative shadow-inner">
+      {/* Classic Realistic 15x15 Ludo King Board */}
+      <div className="aspect-square w-full max-w-[480px] mx-auto bg-white p-2 sm:p-3 rounded-3xl border-4 border-slate-800 shadow-[0_20px_50px_rgba(0,0,0,0.8)] relative">
+        <div className="grid grid-cols-15 grid-rows-15 w-full h-full border border-slate-400 bg-white relative">
           {Array.from({ length: 15 }).map((_, r) =>
             Array.from({ length: 15 }).map((_, c) => {
-              let bg = 'bg-slate-900/90';
+              let bg = 'bg-white border-[0.5px] border-slate-300';
               let isStar = false;
-              if (r < 6 && c < 6) bg = 'bg-gradient-to-br from-red-950 to-red-900/80 border border-red-800/40 shadow-inner';
-              if (r > 8 && c > 8) bg = 'bg-gradient-to-br from-amber-950 to-yellow-900/80 border border-yellow-800/40 shadow-inner';
-              if (r === 7 && c >= 1 && c <= 5) bg = 'bg-red-600/90 shadow-inner';
-              if (r === 7 && c >= 9 && c <= 13) bg = 'bg-yellow-500/90 shadow-inner';
-              if (r === 6 && c === 1) { bg = 'bg-red-600'; isStar = true; }
-              if (r === 8 && c === 13) { bg = 'bg-yellow-500'; isStar = true; }
+              let arrow = null;
+              const isHomeTriangle = (r >= 6 && r <= 8 && c >= 6 && c <= 8);
+
+              // 4 Corner Home Bases
+              if (r < 6 && c < 6) {
+                bg = 'bg-[#e52521] border-none';
+                if (r >= 1 && r <= 4 && c >= 1 && c <= 4) bg = 'bg-white border border-slate-200';
+              } else if (r < 6 && c > 8) {
+                bg = 'bg-[#00a859] border-none';
+                if (r >= 1 && r <= 4 && c >= 10 && c <= 13) bg = 'bg-white border border-slate-200';
+              } else if (r > 8 && c > 8) {
+                bg = 'bg-[#fdb813] border-none';
+                if (r >= 10 && r <= 13 && c >= 10 && c <= 13) bg = 'bg-white border border-slate-200';
+              } else if (r > 8 && c < 6) {
+                bg = 'bg-[#0080ff] border-none';
+                if (r >= 10 && r <= 13 && c >= 1 && c <= 4) bg = 'bg-white border border-slate-200';
+              }
+
+              // Colored Home Columns
+              if (r === 7 && c >= 1 && c <= 5) bg = 'bg-[#e52521] border-[0.5px] border-red-700';
+              if (c === 7 && r >= 1 && r <= 5) bg = 'bg-[#00a859] border-[0.5px] border-green-700';
+              if (r === 7 && c >= 9 && c <= 13) bg = 'bg-[#fdb813] border-[0.5px] border-amber-600';
+              if (c === 7 && r >= 9 && r <= 13) bg = 'bg-[#0080ff] border-[0.5px] border-blue-700';
+
+              // Starting Safe Squares
+              if (r === 6 && c === 1) { bg = 'bg-[#e52521] border-[0.5px] border-red-700'; isStar = true; }
+              if (r === 1 && c === 8) { bg = 'bg-[#00a859] border-[0.5px] border-green-700'; isStar = true; }
+              if (r === 8 && c === 13) { bg = 'bg-[#fdb813] border-[0.5px] border-amber-600'; isStar = true; }
+              if (r === 13 && c === 6) { bg = 'bg-[#0080ff] border-[0.5px] border-blue-700'; isStar = true; }
+
+              // Common track safe stars
               if ((r === 2 && c === 6) || (r === 6 && c === 12) || (r === 12 && c === 8) || (r === 8 && c === 2)) {
                 isStar = true;
-                bg = 'bg-slate-800/90';
               }
-              if (r >= 6 && r <= 8 && c >= 6 && c <= 8) bg = 'bg-gradient-to-br from-red-600 to-yellow-500';
+
+              // Entry Arrows
+              if (r === 7 && c === 0) arrow = '➔';
+              if (r === 0 && c === 7) arrow = '⬇';
+              if (r === 7 && c === 14) arrow = '⬅';
+              if (r === 14 && c === 7) arrow = '⬆';
+
+              if (isHomeTriangle) bg = 'bg-white border-none';
 
               // Tokens check
               const redToken = tokensPlayer.find(t => {
@@ -321,21 +410,48 @@ export default function PracticeModeView({ currentUser, onLeave }) {
 
               return (
                 <div key={`${r}-${c}`} className={`relative flex items-center justify-center text-[7px] ${bg}`}>
-                  {isStar && !(r >= 6 && r <= 8 && c >= 6 && c <= 8) && (
-                    <span className="text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.9)] text-[10px] font-black">★</span>
+                  {isStar && !isHomeTriangle && (
+                    <span className={`text-sm sm:text-base font-black select-none ${
+                      (r === 6 && c === 1) || (r === 8 && c === 13)
+                        ? 'text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]'
+                        : 'text-slate-400'
+                    }`}>
+                      ☆
+                    </span>
                   )}
+
+                  {arrow && (
+                    <span className="text-xs font-black text-slate-700 select-none">
+                      {arrow}
+                    </span>
+                  )}
+
+                  {r === 7 && c === 7 && (
+                    <div className="absolute inset-[-100%] w-[300%] h-[300%] pointer-events-none z-0">
+                      <svg viewBox="0 0 100 100" className="w-full h-full">
+                        <polygon points="0,0 50,50 0,100" fill="#e52521" />
+                        <polygon points="0,0 50,50 100,0" fill="#00a859" />
+                        <polygon points="100,0 50,50 100,100" fill="#fdb813" />
+                        <polygon points="0,100 50,50 100,100" fill="#0080ff" />
+                        <circle cx="50" cy="50" r="8" fill="#ffffff" />
+                        <circle cx="50" cy="50" r="6" fill="#f59e0b" />
+                      </svg>
+                    </div>
+                  )}
+
                   {redToken && (
-                    <button
+                    <LudoPinToken
+                      color="red"
+                      isClickable={turn === 'player' && hasRolled}
                       onClick={() => handlePlayerMove(redToken.id)}
-                      className="w-[85%] h-[85%] rounded-full bg-gradient-to-b from-red-400 via-red-500 to-red-700 text-white font-black flex items-center justify-center shadow-[0_4px_8px_rgba(0,0,0,0.7),inset_0_2px_3px_rgba(255,255,255,0.45)] ring-1 ring-red-200 animate-pulse cursor-pointer z-10"
-                    >
-                      {redToken.id + 1}
-                    </button>
+                    />
                   )}
                   {botToken && (
-                    <div className="w-[85%] h-[85%] rounded-full bg-gradient-to-b from-yellow-300 via-amber-400 to-amber-600 text-slate-950 font-black flex items-center justify-center shadow-[0_4px_8px_rgba(0,0,0,0.7),inset_0_2px_3px_rgba(255,255,255,0.45)] ring-1 ring-yellow-100 z-10">
-                      🤖
-                    </div>
+                    <LudoPinToken
+                      color="yellow"
+                      isClickable={false}
+                      onClick={() => {}}
+                    />
                   )}
                 </div>
               );

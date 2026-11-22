@@ -171,45 +171,54 @@ export default function ChessGameView({ match, gameState, currentUser, socket, o
           </div>
         </div>
 
-        {/* 8x8 Deluxe Realistic Chessboard */}
-        <div className="relative aspect-square w-full max-w-[480px] bg-gradient-to-br from-amber-950 via-stone-900 to-amber-950 p-3 sm:p-4 rounded-[2rem] border-[6px] border-amber-900/80 shadow-[0_25px_60px_rgba(0,0,0,0.85),inset_0_2px_4px_rgba(255,255,255,0.15)]">
-          <div className="grid grid-cols-8 grid-rows-8 w-full h-full rounded-xl overflow-hidden border-2 border-amber-900/90 shadow-inner">
-            {board.map((row, r) =>
-              row.map((piece, c) => {
-                const isLight = (r + c) % 2 === 0;
-                const isSelected = selectedSquare && selectedSquare.r === r && selectedSquare.c === c;
+        {/* 8x8 Classic Ocean Blue Chessboard (Ref: Encyclopedia Britannica Edition) */}
+        <div className="relative aspect-square w-full max-w-[480px] bg-slate-950 p-2 sm:p-3 rounded-3xl border-4 border-slate-700 shadow-[0_25px_60px_rgba(0,0,0,0.85)]">
+          <div className="w-full h-full flex flex-col border-2 border-slate-700 rounded-xl overflow-hidden shadow-2xl bg-[#92c9f9]">
+            {/* 8 Rows */}
+            <div className="grid grid-cols-8 grid-rows-8 w-full h-full flex-1">
+              {board.map((row, r) =>
+                row.map((piece, c) => {
+                  const isLight = (r + c) % 2 === 0;
+                  const isSelected = selectedSquare && selectedSquare.r === r && selectedSquare.c === c;
 
-                return (
-                  <button
-                    key={`${r}-${c}`}
-                    onClick={() => handleSquareClick(r, c)}
-                    className={`relative flex items-center justify-center text-3xl sm:text-4xl select-none transition cursor-pointer ${
-                      isLight 
-                        ? 'bg-[#edd6b0] hover:bg-[#faebd7] shadow-inner' 
-                        : 'bg-[#b8860b] hover:bg-[#a67706] shadow-inner'
-                    } ${isSelected ? 'ring-4 ring-cyan-400 z-10 scale-105 shadow-xl' : ''}`}
-                  >
-                    {/* Rank coordinate on first column */}
-                    {c === 0 && (
-                      <span className={`absolute top-0.5 left-1 text-[8px] font-bold font-mono ${isLight ? 'text-amber-800' : 'text-amber-100/70'}`}>
-                        {8 - r}
-                      </span>
-                    )}
-                    {/* File coordinate on bottom row */}
-                    {r === 7 && (
-                      <span className={`absolute bottom-0.5 right-1 text-[8px] font-bold font-mono ${isLight ? 'text-amber-800' : 'text-amber-100/70'}`}>
-                        {String.fromCharCode(97 + c)}
-                      </span>
-                    )}
-                    {piece && (
-                      <span className={`drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)] font-serif ${piece === piece.toUpperCase() ? 'text-white' : 'text-slate-950'}`}>
-                        {PIECE_SYMBOLS[piece]}
-                      </span>
-                    )}
-                  </button>
-                );
-              })
-            )}
+                  return (
+                    <button
+                      key={`${r}-${c}`}
+                      onClick={() => handleSquareClick(r, c)}
+                      className={`relative flex items-center justify-center text-3xl sm:text-4xl select-none transition cursor-pointer ${
+                        isLight 
+                          ? 'bg-[#92c9f9] hover:bg-[#a6d5fa]' 
+                          : 'bg-[#006994] hover:bg-[#0877a6]'
+                      } ${isSelected ? 'ring-4 ring-amber-400 z-10 scale-105 shadow-2xl' : ''}`}
+                    >
+                      {/* Rank number on leftmost column (left side of square) */}
+                      {c === 0 && (
+                        <span className={`absolute top-0.5 left-1 text-[9px] font-black font-sans ${isLight ? 'text-[#004e70]' : 'text-[#cbe7fc]'}`}>
+                          {8 - r}
+                        </span>
+                      )}
+                      {/* File letter on bottom row (bottom-right of square) */}
+                      {r === 7 && (
+                        <span className={`absolute bottom-0.5 right-1 text-[9px] font-black font-sans ${isLight ? 'text-[#004e70]' : 'text-[#cbe7fc]'}`}>
+                          {String.fromCharCode(97 + c)}
+                        </span>
+                      )}
+
+                      {/* Staunton Chess Piece */}
+                      {piece && (
+                        <span className={`select-none font-serif leading-none transition-transform duration-100 ${
+                          piece === piece.toUpperCase()
+                            ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]'
+                            : 'text-slate-950 drop-shadow-[0_2px_3px_rgba(255,255,255,0.4)]'
+                        } ${isSelected ? 'scale-115' : 'hover:scale-110'}`}>
+                          {PIECE_SYMBOLS[piece]}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })
+              )}
+            </div>
           </div>
         </div>
       </div>
