@@ -5,7 +5,7 @@ import { translations } from '../utils/i18n';
 import { 
   Trophy, Swords, TrendingUp, Users, Copy, Check, 
   Calendar, ShieldCheck, ArrowLeft, RefreshCw, Settings, 
-  Lock, Globe, Volume2, VolumeX, Shield, Edit3 
+  Lock, Globe, Volume2, VolumeX, Shield, Edit3, Headphones, ChevronRight, HelpCircle 
 } from 'lucide-react';
 
 const AVATAR_OPTIONS = [
@@ -25,7 +25,8 @@ export default function PlayerProfileExpanded({
   onToggleLang, 
   onBack, 
   onLogout,
-  onUserUpdate 
+  onUserUpdate,
+  onOpenDisputes 
 }) {
   const t = translations[lang] || translations.bn;
   const [activeTab, setActiveTab] = useState('stats'); // 'stats' | 'history' | 'settings'
@@ -158,6 +159,23 @@ export default function PlayerProfileExpanded({
             />
           </div>
         </div>
+      </div>
+
+      {/* 24/7 Customer Support & Disputes Card */}
+      <div 
+        onClick={onOpenDisputes}
+        className="bg-gradient-to-r from-purple-950/70 via-slate-900 to-slate-950 border border-purple-500/30 hover:border-purple-500/60 p-4 rounded-3xl flex items-center justify-between cursor-pointer shadow-lg transition transform active:scale-98"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-2xl bg-purple-500/20 text-purple-400 border border-purple-500/30 flex items-center justify-center shadow-inner">
+            <Headphones className="w-5 h-5" />
+          </div>
+          <div>
+            <span className="font-black text-white text-xs block">২৪/৭ কাস্টমার সাপোর্ট ও হেল্প</span>
+            <span className="text-[11px] text-purple-300 block">যেকোনো সমস্যা, রিচার্জ বা অভিযোগ জানাতে ক্লিক করুন</span>
+          </div>
+        </div>
+        <ChevronRight className="w-4 h-4 text-purple-400 shrink-0" />
       </div>
 
       {/* Tabs */}
@@ -315,6 +333,17 @@ export default function PlayerProfileExpanded({
             </span>
             <span className="text-[11px] text-slate-400 block">Device: Mobile Web / Chrome</span>
             <span className="text-[10px] text-emerald-400 font-mono">🟢 Secure Token Encrypted</span>
+          </div>
+
+          {/* Support in Settings */}
+          <div 
+            onClick={onOpenDisputes}
+            className="p-3.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-2xl flex items-center justify-between cursor-pointer transition"
+          >
+            <span className="font-bold text-white flex items-center gap-2">
+              <Headphones className="w-4 h-4 text-purple-400" /> কাস্টমার সাপোর্ট ও অভিযোগ
+            </span>
+            <span className="text-[11px] text-purple-400 font-bold">ওপেন করুন ➔</span>
           </div>
 
           {/* Logout Button */}

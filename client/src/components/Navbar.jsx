@@ -45,44 +45,6 @@ export default function Navbar({
         </div>
       </div>
 
-      {/* Middle Navigation Icons */}
-      <div className="flex items-center gap-1 sm:gap-2">
-        <button
-          onClick={onOpenLeaderboard}
-          title="র‍্যাঙ্কিং ও লিডারবোর্ড"
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-amber-400 text-xs font-bold transition cursor-pointer"
-        >
-          <Trophy className="w-4 h-4 text-amber-400" />
-          <span className="hidden lg:inline">লিডারবোর্ড</span>
-        </button>
-
-        <button
-          onClick={onOpenTournaments}
-          title="মেগা টুর্নামেন্টস"
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-orange-400 text-xs font-bold transition cursor-pointer"
-        >
-          <Swords className="w-4 h-4 text-orange-400" />
-          <span className="hidden lg:inline">টুর্নামেন্ট</span>
-        </button>
-
-        <button
-          onClick={currentUser ? onOpenFriends : onOpenAuth}
-          title="বন্ধুর তালিকা"
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-cyan-400 text-xs font-bold transition cursor-pointer"
-        >
-          <Users className="w-4 h-4 text-cyan-400" />
-          <span className="hidden lg:inline">বন্ধুরা</span>
-        </button>
-
-        <button
-          onClick={onOpenDisputes}
-          title="সাপোর্ট ও অভিযোগ"
-          className="p-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-purple-400 transition cursor-pointer"
-        >
-          <HelpCircle className="w-4 h-4" />
-        </button>
-      </div>
-
       {/* Right Controls */}
       <div className="flex items-center gap-2 sm:gap-3">
         {currentUser ? (

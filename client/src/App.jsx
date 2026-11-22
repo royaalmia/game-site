@@ -422,6 +422,7 @@ export default function App() {
                 onBack={() => setActiveTab('home')}
                 onLogout={handleLogout}
                 onUserUpdate={refreshUser}
+                onOpenDisputes={() => setDisputesModalOpen(true)}
               />
             )}
           </>
