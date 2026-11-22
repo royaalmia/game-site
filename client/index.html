@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="bn" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>LuduStar Pro — Online Multiplayer Skill Gaming Platform</title>
+    <meta name="description" content="Play Ludo, Chess & Carrom with real-time multiplayer 1v1 and 2v2 team matches." />
+    
+    <!-- PWA & Mobile Web App Meta -->
+    <meta name="theme-color" content="#070b14" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Google Fonts: Premium English (Plus Jakarta Sans + Outfit) & Premium Bangla (Hind Siliguri) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+      :root {
+        --font-english: 'Plus Jakarta Sans', 'Outfit', sans-serif;
+        --font-bangla: 'Hind Siliguri', sans-serif;
+      }
+      
+      body {
+        font-family: var(--font-english);
+        background-color: #070b14;
+        color: #f3f4f6;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* Automatic fallback for Bengali script to Hind Siliguri */
+      :lang(bn), .font-bangla {
+        font-family: 'Hind Siliguri', var(--font-english);
+      }
+
+      /* Numbers and English text styling */
+      .font-numeric {
+        font-family: 'Plus Jakarta Sans', 'Outfit', monospace;
+        font-feature-settings: "tnum";
+      }
+    </style>
+  </head>
+  <body class="bg-[#070b14] text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-900 min-h-screen overflow-x-hidden">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

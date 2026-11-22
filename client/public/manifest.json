@@ -1,0 +1,21 @@
+{
+  "short_name": "LuduStar",
+  "name": "LuduStar Pro - Online Multiplayer Gaming Arena",
+  "icons": [
+    {
+      "src": "https://api.dicebear.com/7.x/bottts/svg?seed=LuduApp192",
+      "type": "image/svg+xml",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://api.dicebear.com/7.x/bottts/svg?seed=LuduApp512",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#070b14",
+  "theme_color": "#070b14",
+  "display": "standalone",
+  "orientation": "portrait"
+}

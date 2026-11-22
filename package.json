@@ -1,0 +1,15 @@
+{
+  "name": "ludustar-platform",
+  "version": "1.0.0",
+  "description": "Multiplayer Online Skill-Gaming Platform (Ludo, Chess, Carrom) with 5% Commission Escrow Engine and Admin Panel",
+  "scripts": {
+    "start": "node server/src/index.js",
+    "build:client": "cd client && npm run build",
+    "build": "cd client && npm run build",
+    "dev:server": "cd server && node src/index.js",
+    "dev:client": "cd client && npm run dev"
+  },
+  "keywords": ["ludo", "multiplayer", "chess", "carrom", "escrow", "gaming-platform"],
+  "author": "LuduStar Pro Team",
+  "license": "MIT"
+}
